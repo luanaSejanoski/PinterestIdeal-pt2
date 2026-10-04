@@ -163,23 +163,23 @@ fun CampoEditar(nomeCampo: String, placeholder: String? = null){
 
 
 
-
-@Composable
-fun OutrasConfiguracoesCaixa(titulo: String, descricao: String, icon: ImageVector){
-    Row(modifier = Modifier.fillMaxWidth()
-        .padding(horizontal = 8.dp, vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = titulo, color = Color.White, fontWeight = FontWeight.Bold)
-            Text(text = descricao, color = Color.Gray)
-        }
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color.White
-        )
-    }
-}
+//
+//@Composable
+//fun OutrasConfiguracoesCaixa(titulo: String, descricao: String, icon: ImageVector){
+//    Row(modifier = Modifier.fillMaxWidth()
+//        .padding(horizontal = 8.dp, vertical = 15.dp),
+//        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+//        Column(modifier = Modifier.weight(1f)) {
+//            Text(text = titulo, color = Color.White, fontWeight = FontWeight.Bold)
+//            Text(text = descricao, color = Color.Gray)
+//        }
+//        Icon(
+//            imageVector = icon,
+//            contentDescription = null,
+//            tint = Color.White
+//        )
+//    }
+//}
 
 
 @Composable
@@ -187,7 +187,7 @@ fun geraBotao(x: Float, texto: String){
     var habilitado by remember { mutableStateOf(false) }
     Button(
         modifier = Modifier.fillMaxWidth(x),
-        contentPadding = PaddingValues(horizontal = 3.dp, vertical = 3.dp),
+        contentPadding = PaddingValues(horizontal = 3.dp, vertical = 4.dp),
         onClick = {},
         enabled = habilitado,
         shape = RoundedCornerShape(13.dp),
@@ -201,24 +201,24 @@ fun geraBotao(x: Float, texto: String){
 }
 
 
-@Composable
-fun geraBotaoAtivacao(){
-    var ativado by remember { mutableStateOf(false) }
-    Switch(
-        checked = ativado,
-        onCheckedChange = {novoEstado -> ativado = novoEstado},
-        colors = SwitchDefaults.colors(
-            checkedThumbColor = Color.White,
-            uncheckedThumbColor = Color.White,
-            checkedTrackColor = Color(99,149, 238),
-            uncheckedTrackColor = Color.Black,
-            checkedBorderColor = Color(99,149, 238),
-            uncheckedBorderColor = Color.White,
-        )
-    )
-
-
-}
+//@Composable
+//fun geraBotaoAtivacao(){
+//    var ativado by remember { mutableStateOf(false) }
+//    Switch(
+//        checked = ativado,
+//        onCheckedChange = {novoEstado -> ativado = novoEstado},
+//        colors = SwitchDefaults.colors(
+//            checkedThumbColor = Color.White,
+//            uncheckedThumbColor = Color.White,
+//            checkedTrackColor = Color(99,149, 238),
+//            uncheckedTrackColor = Color.Black,
+//            checkedBorderColor = Color(99,149, 238),
+//            uncheckedBorderColor = Color.White,
+//        )
+//    )
+//
+//
+//}
 
 
 
@@ -237,93 +237,65 @@ fun TelaEditarPerfil() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Row( modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    gerarConteudoBloco(Color(0xFF1e1e1e), 45, 5, icon = Icons.Default.KeyboardArrowLeft)
-                    Text(text="Editar perfil", color = Color.White, textAlign = TextAlign.Center)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    gerarConteudoBloco(
+                        Color(0xFF1e1e1e),
+                        45,
+                        5,
+                        icon = Icons.Default.KeyboardArrowLeft
+                    )
+                    Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
                     geraBotao(0.25f, "Feito")
                 }
 
 
 
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp)
-                ) {
-                    Text(text = "Mantenha seus dados privado. As informações que você adiciona aqui ficam visíveis para qualquer pessoa que possa vizualizar seu perfil.", color = Color.Gray)
-                }
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 30.dp),
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 30.dp),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically) {
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        gerarConteudoBloco(x = 150, y = 5, cor = Color.Red, raio = 75, imagem = R.drawable.foto_perfil_editar)
-                        geraBotao(0.2f,"Editar")
+                        gerarConteudoBloco(
+                            x = 150,
+                            y = 5,
+                            cor = Color.Red,
+                            raio = 75,
+                            imagem = R.drawable.foto_perfil_editar
+                        )
+                        geraBotao(0.2f, "Editar")
                     }
                 }
 
 
 
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(30.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(30.dp)
+                    ) {
                         CampoEditar("Nome", "PinterestIdeal")
                         CampoEditar("Nome de usuário", "pinterest_Ideal")
+                        CampoEditar("Biografia", "Sempre feliz usando o Pinterest Ideal <3")
+                        CampoEditar("Email", "pinterestideal@gmail.com")
                     }
-                }
-
-
-                Row(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
-                    Column{
-                        OutrasConfiguracoesCaixa("Pronomes", "Compartilhe agora como as pessoas devem se dirigir a você", Icons.Default.KeyboardArrowRight)
-                        OutrasConfiguracoesCaixa("Sobre", "Conte a sua história", Icons.Default.KeyboardArrowRight)
-                    }
-                }
-
-
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(30.dp)) {
-                        CampoEditar("Site", "Adicione um link para aumentar o tráfego no seu site")
-                    }
-                }
-
-
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp)) {
-                    Text(text = "Layout", color= Color.White)
-                }
-
-
-
-
-                Row(modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Column(modifier = Modifier.weight(1f),
-                    ) {
-
-
-                        Text(text = "Mostrar todos os Pins", color = Color.White, fontWeight = FontWeight.Bold)
-                        Text(text = "As pessoas que visitarem seu perfil poderão ver uma coleção de todos os Pins que você salvou." +
-                                " Os Pins salvos em pastas secretas não ficarão visíveis.", color = Color.Gray)
-                    }
-                    geraBotaoAtivacao()
-
-
                 }
             }
         }
-
-
-
-
-
-
     }
-
-
 }
 
 
