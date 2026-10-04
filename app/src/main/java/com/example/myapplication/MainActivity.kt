@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,7 +40,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -51,7 +49,7 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    TelaMensagem()
+                    TelaPesquisa()
                 }
             }
         }
@@ -68,63 +66,36 @@ fun GerarBloco(cor: Color, altura: Int, largura: Int = altura, texto: String = "
             .padding(5.dp),
         color = cor,
         shape = RoundedCornerShape(5.dp),
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ){
-
-            if(icon != null){
-                Icon(
-                    imageVector = icon,
-                    contentDescription = texto,
-                    tint = Color.White,
-                    modifier = Modifier.size(60.dp)
-                )
-            }
-            else if(texto.isNotEmpty())
-                Text(text = texto,
-                    color = Color.White
-                )
-        }
-    }
+    ) {}
 }
+
 @Preview
 @Composable
-fun TelaMensagem() {
+fun TelaPesquisa() {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
     ) {
-        Column {
-            Row(
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxSize()
+                    .padding(bottom = 50.dp)
             ) {
-
-                GerarBloco(Color(0xFF1e1e1e), 50, icon = Icons.Default.KeyboardArrowLeft)
-
-                Text(
-                    text = "Nova Mensagem",
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(top = 14.dp, start = 70.dp),
-                    color = Color.White)
-
-                criaBotao(0.7f, "Avançar")
+                Spacer(modifier = Modifier.height(40.dp))
+                BarraPesquisa()
+                Spacer(modifier = Modifier.height(16.dp))
+                Usuarios("Luana", "luanabanana", imagem = R.drawable.user)
+                Usuarios("Leticia", "let_07", imagem = R.drawable.user)
+                Usuarios("Maria", "mariaria_franca", imagem = R.drawable.user)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            BarraPesquisa()
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Usuarios("Luana", "luanabanana", imagem = R.drawable.user)
-            Usuarios("Leticia", "let_07", imagem = R.drawable.user)
-            Usuarios("Maria", "mariaria_franca", imagem = R.drawable.user)
+            MenuInferior(
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
     }
 }
