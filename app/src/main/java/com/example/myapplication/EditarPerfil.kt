@@ -57,6 +57,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 
 
@@ -81,7 +82,7 @@ class EditarPerfil : ComponentActivity() {
 
 
 @Composable
-fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Int? = null, icon: ImageVector? = null){
+fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Int? = null, icon: Painter? = null){
     Surface(
         modifier = Modifier
             .requiredSize(x.dp)
@@ -101,7 +102,7 @@ fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Int? = null, i
 
         if(icon != null){
             Icon(
-                imageVector = icon,
+                painter = icon,
                 contentDescription = null,
                 tint = Color.White
             )
@@ -122,7 +123,7 @@ fun gerarConteudoBloco(cor: Color? = null,
                        y: Int,
                        raio: Int? = 0,
                        imagem: Int? = null,
-                       icon: ImageVector? = null,
+                       icon: Painter? = null,
                        texto: String? = null,
                        corTexto: Color = Color.White
 ){
@@ -246,7 +247,7 @@ fun TelaEditarPerfil() {
                         Color(0xFF1e1e1e),
                         45,
                         5,
-                        icon = Icons.Default.KeyboardArrowLeft
+                        icon = painterResource(R.drawable.voltar)
                     )
                     Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
                     geraBotao(0.25f, "Feito")
