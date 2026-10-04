@@ -32,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.PaddingValues
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 
@@ -64,7 +67,7 @@ fun TelaMsg() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 10.dp),
+                    .padding(horizontal = 10.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -140,13 +143,20 @@ fun TelaMsg() {
                     Spacer(modifier = Modifier.width(1.dp))
 
                     // botão enviar
-                    Surface(
+                    Button(
+                        onClick = {
+
+                        },
                         modifier = Modifier
                             .width(40.dp)
                             .height(30.dp)
                             .padding(end = 5.dp),
-                        color = Color.Red,
-                        shape = RoundedCornerShape(3.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Red
+                        ),
+                        shape = RoundedCornerShape(3.dp) ,
+                        contentPadding = PaddingValues(0.dp)
+
                     ) {
                         Icon(
                             imageVector = Icons.Default.Send,
@@ -169,7 +179,7 @@ fun CampoMsg(modifier: Modifier){
             .padding(horizontal = 20.dp),
         color = Color(0xFF2c2c2c),
         shape = RoundedCornerShape(5.dp),
-        border = BorderStroke(2.dp, Color.White)
+        border = BorderStroke(1.dp, Color.White)
     ){
         Row(
             modifier = Modifier.padding(horizontal = 1.dp, vertical = 12.dp),
