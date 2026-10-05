@@ -195,11 +195,6 @@ fun geraBotao(x: Float, texto: String,){
 //
 //}
 
-
-
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun TelaEditarPerfil() {
