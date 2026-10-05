@@ -211,6 +211,7 @@ fun TelaEditarPerfil() {
     )
 
     val usuario = Dados.usuarios.find { it.id == 0 }
+
     var nomeExibicao by remember {mutableStateOf(usuario?.nomeExibicao)
     }
 
