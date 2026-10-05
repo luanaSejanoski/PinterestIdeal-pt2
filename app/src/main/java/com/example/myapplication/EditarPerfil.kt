@@ -62,8 +62,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 
 
 import androidx.compose.ui.text.font.FontWeight
-
-
+import com.example.myapplication.data.Dados
 
 
 class EditarPerfil : ComponentActivity() {
@@ -110,13 +109,6 @@ fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Int? = null, i
     }
 }
 
-
-
-
-
-
-
-
 @Composable
 fun gerarConteudoBloco(cor: Color? = null,
                        x: Int,
@@ -139,7 +131,7 @@ fun gerarConteudoBloco(cor: Color? = null,
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CampoEditar(nomeCampo: String, placeholder: String? = null){
-    var nome by remember { mutableStateOf("") }
+    var nome by remember { mutableStateOf(placeholder?: "") }
     var focado by remember { mutableStateOf(false) }
     TextField(
         modifier = Modifier.fillMaxWidth()
@@ -147,7 +139,7 @@ fun CampoEditar(nomeCampo: String, placeholder: String? = null){
                 color = if (focado) Color.White else Color.Gray,
                 shape = RoundedCornerShape(8.dp))
             .onFocusChanged{campoFocado -> focado = campoFocado.isFocused},
-        value = placeholder?: "",
+        value = nome,
         onValueChange = {novoNome -> nome = novoNome},
         label = { Text(text = nomeCampo)},
         colors = TextFieldDefaults.textFieldColors(
@@ -164,27 +156,9 @@ fun CampoEditar(nomeCampo: String, placeholder: String? = null){
 
 
 
-//
-//@Composable
-//fun OutrasConfiguracoesCaixa(titulo: String, descricao: String, icon: ImageVector){
-//    Row(modifier = Modifier.fillMaxWidth()
-//        .padding(horizontal = 8.dp, vertical = 15.dp),
-//        horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-//        Column(modifier = Modifier.weight(1f)) {
-//            Text(text = titulo, color = Color.White, fontWeight = FontWeight.Bold)
-//            Text(text = descricao, color = Color.Gray)
-//        }
-//        Icon(
-//            imageVector = icon,
-//            contentDescription = null,
-//            tint = Color.White
-//        )
-//    }
-//}
-
 
 @Composable
-fun geraBotao(x: Float, texto: String){
+fun geraBotao(x: Float, texto: String,){
     var habilitado by remember { mutableStateOf(false) }
     Button(
         modifier = Modifier.fillMaxWidth(x),
@@ -229,6 +203,23 @@ fun geraBotao(x: Float, texto: String){
 @Preview(showBackground = true)
 @Composable
 fun TelaEditarPerfil() {
+
+    Dados.usuarios.add(
+        Usuario(
+            id = 0,
+            nomeExibicao = "Maria Silva",
+            nomeUsuario = "maria",
+            biografia = "Amo fotografia 📷",
+            email = "maria@email.com",
+            foto = null
+        )
+    )
+
+    val usuario = Dados.usuarios.find { it.id == 0 }
+    var nomeExibicao by remember {mutableStateOf(usuario?.nomeExibicao)
+    }
+
+
     Surface(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         color = Color(0xFF1e1e1e),) {
         Row( modifier = Modifier
@@ -250,10 +241,8 @@ fun TelaEditarPerfil() {
                         icon = painterResource(R.drawable.voltar)
                     )
                     Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
-                    geraBotao(0.25f, "Feito")
+                    geraBotao(0.25f, "Feito",)
                 }
-
-
 
 
                 Row(
@@ -274,8 +263,6 @@ fun TelaEditarPerfil() {
                         geraBotao(0.2f, "Editar")
                     }
                 }
-
-
 
 
                 Row(
