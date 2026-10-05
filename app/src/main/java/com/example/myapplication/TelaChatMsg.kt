@@ -134,7 +134,6 @@ fun TelaMsg() {
                 )
             }
 
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -180,7 +179,7 @@ fun TelaMsg() {
 
 
 
-            // CAMPO DE MENSAGEM + BOTÃO
+            // campo de mensagem
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -218,7 +217,7 @@ fun TelaMsg() {
                 )
 
 
-                // BOTÃO ENVIAR
+                // botao enviar
                 Button(
                     onClick = {
 

@@ -36,6 +36,17 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.onFocusChanged
+import com.example.myapplication.data.Dados
+import com.example.myapplication.data.Pasta
 
 class CriarPasta : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,9 +62,17 @@ class CriarPasta : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun TelaCriarPasta(){
+
+    var nomePasta by remember { mutableStateOf("") }
+    var descricao by remember { mutableStateOf("") }
+    var nomeFocado by remember { mutableStateOf(false) }
+    var descricaoFocada by remember { mutableStateOf(false) }
+
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
@@ -108,11 +127,28 @@ fun TelaCriarPasta(){
                         .padding(horizontal = 20.dp),
                     color = Color.Transparent,
                     shape = RoundedCornerShape(5.dp),
-                    border = BorderStroke(1.dp, Color.White)
+                    border = BorderStroke(1.dp,
+                        if(nomeFocado) Color.Red else Color.White)
                 ) {
-                    Text(text = " Nome da pasta",
-                        color = Color.White,
-                        modifier = Modifier.padding(10.dp))
+                    TextField(
+                        value = nomePasta,
+                        onValueChange = { nomePasta = it },
+                        modifier = Modifier.onFocusChanged {
+                            nomeFocado = it.isFocused
+                        },
+                        textStyle = LocalTextStyle.current.copy(
+                            color = Color.White
+                        ),
+                        placeholder = {
+                            Text(
+                                text = "Nome da pasta",
+                                color = Color.White
+                            )
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = Color.Transparent
+                        )
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(30.dp))
@@ -124,21 +160,41 @@ fun TelaCriarPasta(){
                         .padding(horizontal = 20.dp),
                     color = Color.Transparent,
                     shape = RoundedCornerShape(5.dp),
-                    border = BorderStroke(1.dp, Color.White)
+                    border = BorderStroke(1.dp,
+                        if(descricaoFocada) Color.Red else Color.White)
                 ) {
-                    Text(text = " Descrição(opcional)",
-                        color = Color.White,
-                        modifier = Modifier.padding(10.dp))
+                        TextField(
+                            value = descricao,
+                            onValueChange = { descricao = it },
+                            modifier = Modifier.onFocusChanged {
+                                descricaoFocada = it.isFocused
+                            },
+                            textStyle = LocalTextStyle.current.copy(
+                                color = Color.White
+                            ),
+                            placeholder = {
+                                Text(
+                                    text = "Descrição (opcional)",
+                                    color = Color.White
+                                )
+                            },
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = Color.Transparent
+                            )
+                        )
                 }
             }
 
+            val novaPasta = Pasta(0, nomePasta, descricao)
 
             BtnCriarPasta(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onClick = {
-                    println("Criar pasta clicado")
-                }
+                    Dados.pastas.add(novaPasta)
 
+                    Dados.pastas.forEach { println(novaPasta) }
+
+                }
             )
         }
     }
