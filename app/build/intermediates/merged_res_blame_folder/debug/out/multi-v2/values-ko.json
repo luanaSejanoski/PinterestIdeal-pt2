@@ -4,7 +4,24 @@
             "outputFile": "com.example.myapplication.app-mergeDebugResources-44:/values-ko/values-ko.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\95307028250a3d1c2707ec3c5d80d07c\\transformed\\material3-1.0.0\\res\\values-ko\\values-ko.xml",
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\1d6dbb199e24be8899936a038b75ad4d\\transformed\\core-1.9.0\\res\\values-ko\\values-ko.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "19",
+                        "startColumns": "4",
+                        "startOffsets": "1386",
+                        "endColumns": "100",
+                        "endOffsets": "1482"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\95307028250a3d1c2707ec3c5d80d07c\\transformed\\material3-1.0.0\\res\\values-ko\\values-ko.xml",
                     "from": {
                         "startLines": "2,3,4",
                         "startColumns": "4,4,4",
@@ -21,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\14bdfe3dcb364c78b94952aa2496e136\\transformed\\ui-1.4.3\\res\\values-ko\\values-ko.xml",
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\14bdfe3dcb364c78b94952aa2496e136\\transformed\\ui-1.4.3\\res\\values-ko\\values-ko.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -35,23 +52,6 @@
                         "startOffsets": "105,184,331,419,579,729,804,883,962,1041,1105,1169,1242,1318,1487,1561,1625",
                         "endColumns": "78,75,87,89,79,74,78,78,78,63,63,72,75,67,73,63,113",
                         "endOffsets": "179,255,414,504,654,799,878,957,1036,1100,1164,1237,1313,1381,1556,1620,1734"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\1d6dbb199e24be8899936a038b75ad4d\\transformed\\core-1.9.0\\res\\values-ko\\values-ko.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "19",
-                        "startColumns": "4",
-                        "startOffsets": "1386",
-                        "endColumns": "100",
-                        "endOffsets": "1482"
                     }
                 }
             ]

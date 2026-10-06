@@ -4,7 +4,7 @@
             "outputFile": "com.example.myapplication.app-mergeDebugResources-44:/values-ne/values-ne.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\1d6dbb199e24be8899936a038b75ad4d\\transformed\\core-1.9.0\\res\\values-ne\\values-ne.xml",
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\1d6dbb199e24be8899936a038b75ad4d\\transformed\\core-1.9.0\\res\\values-ne\\values-ne.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -21,24 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\95307028250a3d1c2707ec3c5d80d07c\\transformed\\material3-1.0.0\\res\\values-ne\\values-ne.xml",
-                    "from": {
-                        "startLines": "2,3,4",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "55,139,210",
-                        "endColumns": "83,70,83",
-                        "endOffsets": "134,205,289"
-                    },
-                    "to": {
-                        "startLines": "4,7,9",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "294,569,726",
-                        "endColumns": "83,70,83",
-                        "endOffsets": "373,635,805"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\14bdfe3dcb364c78b94952aa2496e136\\transformed\\ui-1.4.3\\res\\values-ne\\values-ne.xml",
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\14bdfe3dcb364c78b94952aa2496e136\\transformed\\ui-1.4.3\\res\\values-ne\\values-ne.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -52,6 +35,23 @@
                         "startOffsets": "105,204,378,472,640,810,892,988,1075,1161,1227,1293,1383,1476,1654,1735,1803",
                         "endColumns": "98,89,93,96,85,81,95,86,85,65,65,89,92,76,80,67,119",
                         "endOffsets": "199,289,467,564,721,887,983,1070,1156,1222,1288,1378,1471,1548,1730,1798,1918"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\95307028250a3d1c2707ec3c5d80d07c\\transformed\\material3-1.0.0\\res\\values-ne\\values-ne.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,139,210",
+                        "endColumns": "83,70,83",
+                        "endOffsets": "134,205,289"
+                    },
+                    "to": {
+                        "startLines": "4,7,9",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "294,569,726",
+                        "endColumns": "83,70,83",
+                        "endOffsets": "373,635,805"
                     }
                 }
             ]

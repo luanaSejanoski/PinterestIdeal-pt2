@@ -4,7 +4,24 @@
             "outputFile": "com.example.myapplication.app-mergeDebugResources-44:/values-ro/values-ro.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\1d6dbb199e24be8899936a038b75ad4d\\transformed\\core-1.9.0\\res\\values-ro\\values-ro.xml",
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\95307028250a3d1c2707ec3c5d80d07c\\transformed\\material3-1.0.0\\res\\values-ro\\values-ro.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,132,204",
+                        "endColumns": "76,71,73",
+                        "endOffsets": "127,199,273"
+                    },
+                    "to": {
+                        "startLines": "4,7,9",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "286,562,722",
+                        "endColumns": "76,71,73",
+                        "endOffsets": "358,629,791"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\1d6dbb199e24be8899936a038b75ad4d\\transformed\\core-1.9.0\\res\\values-ro\\values-ro.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -21,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\14bdfe3dcb364c78b94952aa2496e136\\transformed\\ui-1.4.3\\res\\values-ro\\values-ro.xml",
+                    "source": "C:\\Users\\luana\\.gradle\\caches\\transforms-3\\14bdfe3dcb364c78b94952aa2496e136\\transformed\\ui-1.4.3\\res\\values-ro\\values-ro.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -35,23 +52,6 @@
                         "startOffsets": "105,202,363,460,634,796,874,961,1052,1134,1206,1275,1363,1453,1627,1704,1771",
                         "endColumns": "96,83,96,101,87,77,86,90,81,71,68,87,89,72,76,66,114",
                         "endOffsets": "197,281,455,557,717,869,956,1047,1129,1201,1270,1358,1448,1521,1699,1766,1881"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\LUANASEJANOSKISCHISL\\.gradle\\caches\\transforms-3\\95307028250a3d1c2707ec3c5d80d07c\\transformed\\material3-1.0.0\\res\\values-ro\\values-ro.xml",
-                    "from": {
-                        "startLines": "2,3,4",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "55,132,204",
-                        "endColumns": "76,71,73",
-                        "endOffsets": "127,199,273"
-                    },
-                    "to": {
-                        "startLines": "4,7,9",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "286,562,722",
-                        "endColumns": "76,71,73",
-                        "endOffsets": "358,629,791"
                     }
                 }
             ]
