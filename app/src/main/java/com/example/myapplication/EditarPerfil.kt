@@ -2,7 +2,6 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,25 +9,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,23 +37,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
-import androidx.compose.material.icons.Icons
 //import androidx.compose.material.icons.filled.ChevronLeft
 //import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 
 
-import androidx.compose.ui.text.font.FontWeight
 import com.example.myapplication.data.Dados
 
 
@@ -130,17 +113,21 @@ fun gerarConteudoBloco(cor: Color? = null,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CampoEditar(nomeCampo: String, placeholder: String? = null){
-    var nome by remember { mutableStateOf(placeholder?: "") }
+fun CampoEditar(nomeCampo: String,
+                valor: String?,
+                onValueChange: (String) -> Unit){
     var focado by remember { mutableStateOf(false) }
     TextField(
-        modifier = Modifier.fillMaxWidth()
-            .border(width = 1.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
                 color = if (focado) Color.White else Color.Gray,
-                shape = RoundedCornerShape(8.dp))
-            .onFocusChanged{campoFocado -> focado = campoFocado.isFocused},
-        value = nome,
-        onValueChange = {novoNome -> nome = novoNome},
+                shape = RoundedCornerShape(8.dp)
+            )
+            .onFocusChanged { campoFocado -> focado = campoFocado.isFocused },
+        value = valor?: "",
+        onValueChange = {novoNome -> onValueChange(novoNome)},
         label = { Text(text = nomeCampo)},
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.Transparent,
@@ -154,16 +141,33 @@ fun CampoEditar(nomeCampo: String, placeholder: String? = null){
     )
 }
 
+fun salvarAlteracoes(usuario: Usuario, nomeExibicao: String,
+                     nomeUsuario: String, biografia: String,
+                     email: String
+){
+   val usuarioAtualizado = usuario.copy(
+       nomeExibicao = nomeExibicao,
+       nomeUsuario = nomeUsuario,
+       biografia = biografia,
+       email = email
+   )
 
+    val indice = Dados.usuarios.indexOfFirst {
+       it.id == usuario.id
+    }
+
+    if(indice != -1){
+        Dados.usuarios[indice] = usuarioAtualizado
+    }
+}
 
 
 @Composable
-fun geraBotao(x: Float, texto: String,){
-    var habilitado by remember { mutableStateOf(false) }
+fun geraBotao(x: Float, texto: String, habilitado: Boolean, onclick: () -> Unit, ){
     Button(
         modifier = Modifier.fillMaxWidth(x),
         contentPadding = PaddingValues(horizontal = 3.dp, vertical = 4.dp),
-        onClick = {},
+        onClick = onclick,
         enabled = habilitado,
         shape = RoundedCornerShape(13.dp),
         colors = ButtonDefaults.buttonColors(
@@ -176,34 +180,14 @@ fun geraBotao(x: Float, texto: String,){
 }
 
 
-//@Composable
-//fun geraBotaoAtivacao(){
-//    var ativado by remember { mutableStateOf(false) }
-//    Switch(
-//        checked = ativado,
-//        onCheckedChange = {novoEstado -> ativado = novoEstado},
-//        colors = SwitchDefaults.colors(
-//            checkedThumbColor = Color.White,
-//            uncheckedThumbColor = Color.White,
-//            checkedTrackColor = Color(99,149, 238),
-//            uncheckedTrackColor = Color.Black,
-//            checkedBorderColor = Color(99,149, 238),
-//            uncheckedBorderColor = Color.White,
-//        )
-//    )
-//
-//
-//}
-
 @Preview(showBackground = true)
 @Composable
 fun TelaEditarPerfil() {
-
     Dados.usuarios.add(
         Usuario(
             id = 0,
             nomeExibicao = "Maria Silva",
-            nomeUsuario = "maria",
+            nomeUsuario = "maria001",
             biografia = "Amo fotografia 📷",
             email = "maria@email.com",
             foto = null
@@ -212,11 +196,20 @@ fun TelaEditarPerfil() {
 
     val usuario = Dados.usuarios.find { it.id == 0 }
 
-    var nomeExibicao by remember {mutableStateOf(usuario?.nomeExibicao)
+    if (usuario == null) {
+        return
     }
 
+        var nomeExibicao by remember { mutableStateOf(usuario.nomeExibicao) }
+        var nomeUsuario by remember { mutableStateOf(usuario.nomeUsuario) }
+        var biografia by remember { mutableStateOf(usuario.biografia) }
+        var email by remember { mutableStateOf(usuario.email) }
+        var fotoPerfil by remember { mutableStateOf(usuario.foto) }
 
-    Surface(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+
+    Surface(modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState()),
         color = Color(0xFF1e1e1e),) {
         Row( modifier = Modifier
             .fillMaxWidth()
@@ -237,7 +230,22 @@ fun TelaEditarPerfil() {
                         icon = painterResource(R.drawable.voltar)
                     )
                     Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
-                    geraBotao(0.25f, "Feito",)
+
+                    val habilitado =
+                        nomeExibicao != usuario.nomeExibicao ||
+                                nomeUsuario != usuario.nomeUsuario ||
+                                biografia != usuario.biografia ||
+                                email != usuario.email
+
+                        geraBotao(0.25f, "Feito",
+                            habilitado,
+                            onclick = {
+                                salvarAlteracoes(
+                                    usuario, nomeExibicao, nomeUsuario,
+                                    biografia, email
+                                )
+                            }
+                        )
                 }
 
 
@@ -256,7 +264,7 @@ fun TelaEditarPerfil() {
                             raio = 75,
                             imagem = R.drawable.foto_perfil_editar
                         )
-                        geraBotao(0.2f, "Editar")
+                        geraBotao(0.2f, "Editar", habilitado = false) {}
                     }
                 }
 
@@ -267,14 +275,25 @@ fun TelaEditarPerfil() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(30.dp)
                     ) {
-                        CampoEditar("Nome", "PinterestIdeal")
-                        CampoEditar("Nome de usuário", "pinterest_Ideal")
-                        CampoEditar("Biografia", "Sempre feliz usando o Pinterest Ideal <3")
-                        CampoEditar("Email", "pinterestideal@gmail.com")
+                        CampoEditar("Nome",
+                            nomeExibicao,
+                            onValueChange = { novoValor ->
+                            nomeExibicao = novoValor
+                        })
+                        CampoEditar("Nome de usuário",
+                            nomeUsuario,
+                            onValueChange = {novoValor -> nomeUsuario = novoValor})
+                        CampoEditar("Biografia",
+                            biografia,
+                            onValueChange = {novoValor -> biografia = novoValor})
+                        CampoEditar("Email",
+                            email,
+                            onValueChange = {novoValor -> email = novoValor})
                     }
                 }
             }
