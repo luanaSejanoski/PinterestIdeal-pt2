@@ -230,12 +230,7 @@ fun TelaEditarPerfil(idUsuario: Int = 0) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    gerarConteudoBloco(
-                        Color(0xFF1e1e1e),
-                        45,
-                        5,
-                        icon = painterResource(R.drawable.voltar)
-                    )
+                    BotaoVoltar()
                     Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
 
                     val habilitado =

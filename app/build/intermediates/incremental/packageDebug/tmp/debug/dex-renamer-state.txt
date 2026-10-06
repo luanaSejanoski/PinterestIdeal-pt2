@@ -1,4 +1,4 @@
-#Tue Oct 06 19:00:50 BRT 2026
+#Tue Oct 06 19:37:49 BRT 2026
 base.0=C\:\\Users\\luana\\AndroidStudioProjects\\PinterestIdeal-pt2\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\luana\\AndroidStudioProjects\\PinterestIdeal-pt2\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.2=C\:\\Users\\luana\\AndroidStudioProjects\\PinterestIdeal-pt2\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\2\\classes.dex

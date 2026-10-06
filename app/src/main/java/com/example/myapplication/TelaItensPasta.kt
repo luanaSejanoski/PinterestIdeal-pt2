@@ -221,12 +221,7 @@ fun telaItensPasta() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    gerarConteudoBloco(
-                        Color(0xFF1e1e1e),
-                        45,
-                        5,
-                        icon = painterResource(R.drawable.voltar)
-                    )
+                   BotaoVoltar()
                 }
                 //informações da pasta
                 Row(
