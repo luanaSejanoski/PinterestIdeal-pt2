@@ -98,7 +98,6 @@ fun TelaMsg() {
         }
     }
 
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
@@ -108,7 +107,7 @@ fun TelaMsg() {
             modifier = Modifier.fillMaxSize()
         ) {
 
-            // CABEÇALHO
+            // cabeçalho
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,8 +176,6 @@ fun TelaMsg() {
                 }
             }
 
-
-
             // campo de mensagem
             Row(
                 modifier = Modifier
@@ -193,52 +190,37 @@ fun TelaMsg() {
 
                 CampoMsg(
                     mensagem = mensagem,
-
                     onMensagemChange = {
                         mensagem = it
                     },
-
                     onEnviar = {
-
                         if (mensagem.isNotBlank()) {
-
                             mensagens = mensagens + mensagem
-
                             mensagem = ""
                         }
                     },
-
                     modifier = Modifier.weight(1f)
                 )
-
 
                 Spacer(
                     modifier = Modifier.width(5.dp)
                 )
 
-
                 // botao enviar
                 Button(
                     onClick = {
-
                         if (mensagem.isNotBlank()) {
-
                             mensagens = mensagens + mensagem
-
                             mensagem = ""
                         }
                     },
-
                     modifier = Modifier
                         .width(40.dp)
                         .height(30.dp),
-
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Red
                     ),
-
                     shape = RoundedCornerShape(3.dp),
-
                     contentPadding = PaddingValues(0.dp)
                 ) {
 
@@ -295,18 +277,14 @@ fun CampoMsg(
             textStyle = TextStyle(
                 color = Color.White
             ),
-
             singleLine = true,
-
             decorationBox = { innerTextField ->
-
                 if (mensagem.isEmpty()) {
                     Text(
                         text = "Digite uma mensagem...",
                         color = Color.Gray
                     )
                 }
-
                 innerTextField()
             }
         )

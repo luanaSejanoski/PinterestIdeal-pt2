@@ -23,10 +23,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,19 +58,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-
-@Composable
-fun GerarBloco(cor: Color, altura: Int, largura: Int = altura, texto: String = "", icon: ImageVector ?= null){
-    Surface(
-        modifier = Modifier
-            .width(largura.dp)
-            .height(altura.dp)
-            .padding(5.dp),
-        color = cor,
-        shape = RoundedCornerShape(5.dp),
-    ) {}
 }
 
 @Preview
@@ -106,7 +97,9 @@ fun criaBotao(x: Float, texto: String){
     Button(
         modifier = Modifier.fillMaxWidth(x),
         contentPadding = PaddingValues(horizontal = 3.dp, vertical = 3.dp),
-        onClick = {},
+        onClick = {
+
+        },
         enabled = habilitado,
         shape = RoundedCornerShape(13.dp),
         colors = ButtonDefaults.buttonColors(
@@ -117,21 +110,29 @@ fun criaBotao(x: Float, texto: String){
         Text(text = texto)
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BarraPesquisa(){
+
+    var pesquisarP by remember { mutableStateOf("") }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp)
+            .height(56.dp),
         color = Color(0xFF2c2c2c),
         shape = RoundedCornerShape(5.dp),
         border = BorderStroke(2.dp, Color.White)
     ){
         Row(
-            modifier = Modifier.padding(horizontal = 1.dp, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(8.dp))
+
+        Spacer(modifier = Modifier.width(8.dp))
 
             Icon(
                 imageVector = Icons.Default.Search,
@@ -141,9 +142,22 @@ fun BarraPesquisa(){
 
             Spacer(modifier = Modifier.padding(5.dp))
 
-            Text(
-                text = "Pesquisar pessoas",
-                color = Color.Gray,
+            TextField(
+                value = pesquisarP,
+                onValueChange =  { pesquisarP = it },
+                singleLine = true,
+                modifier = Modifier.weight(1f),
+                textStyle = LocalTextStyle.current.copy(
+                    color = Color.White
+                ),
+                placeholder = {
+                    Text(text = "Pesquisar pessoas",
+                        color = Color.Gray,
+                    )
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Transparent
+                )
             )
         }
     }

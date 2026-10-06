@@ -8,5 +8,22 @@ data class Usuario(
     val nomeUsuario: String,
     val biografia: String,
     val email: String,
-    val foto: Uri?
+    val foto: Uri?,
+
+    val amigos: List<Int>
+//    val usuarios = listOf(
+//        Usuario(1, "João"),
+//        Usuario(2, "Maria"),
+//        Usuario(3, "Pedro")
+//    )
+//
+//    var amigos by remember {
+//    mutableStateOf(
+//    listOf(
+//    Usuario(1, "João"),
+//    Usuario(3, "Pedro")
+//    )
+//    )
+
 )
+

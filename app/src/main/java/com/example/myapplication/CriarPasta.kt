@@ -191,7 +191,6 @@ fun TelaCriarPasta(){
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onClick = {
                     Dados.pastas.add(novaPasta)
-
                     Dados.pastas.forEach { println(novaPasta) }
 
                 }
