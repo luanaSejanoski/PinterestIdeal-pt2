@@ -4,7 +4,9 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,6 +45,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.runtime.mutableStateListOf
 import coil.compose.rememberAsyncImagePainter
 
 
@@ -88,9 +92,6 @@ fun gerarBlocoIcone(cor: Color? = null,
     }
 }
 
-fun editarNomePasta(nomePasta: String){
-
-}
 
 @Composable
 fun gerarBlocoImagem(
@@ -139,7 +140,7 @@ fun obterTamanhosImagens( listaImagens: MutableList<Pin>) {
     }
 }
 
-@Composable
+
 fun organizaImagensColuna(
     listaPins: List<Pin>,
     colunaEsquerda: MutableList<Pin>,
@@ -174,7 +175,34 @@ fun telaItensPasta() {
         var novoNome by remember { mutableStateOf("") }
 
 
+    val context = LocalContext.current
 
+    val listaImagens = remember { mutableStateListOf<Pin>() }
+
+    val selecionarImagens = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+
+        uris.forEach { uri ->
+
+            val drawable = context.contentResolver
+                .openInputStream(uri)
+                ?.use {
+                    Drawable.createFromStream(it, null)
+                }
+
+            val largura = drawable?.intrinsicWidth ?: 0
+            val altura = drawable?.intrinsicHeight ?: 0
+
+            listaImagens.add(
+                Pin(
+                    imagem = uri,
+                    largura = largura,
+                    altura = altura
+                )
+            )
+        }
+    }
 
     Surface(modifier = Modifier
         .fillMaxSize(),
@@ -186,7 +214,7 @@ fun telaItensPasta() {
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column() {
+            Column( modifier = Modifier.fillMaxWidth()) {
                 //topBar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -266,7 +294,7 @@ fun telaItensPasta() {
                                 )
                             }
                             Row() {
-                                Text(text = "3 Pins", color = Color.White)
+                                Text(text = "${listaImagens.size} Pins", color = Color.White)
                             }
                         }
                     }
@@ -276,7 +304,8 @@ fun telaItensPasta() {
                             Color(0xFF1e1e1e),
                             30,
                             5,
-                            icon = painterResource(R.drawable.carregar_imagem)
+                            icon = painterResource(R.drawable.carregar_imagem),
+                            onClick = {selecionarImagens.launch("image/*")}
                         )
                         gerarBlocoIcone(
                             Color(0xFF1e1e1e),
@@ -290,16 +319,19 @@ fun telaItensPasta() {
 
 
                 //cria lista das imagens
-                val listaImagens = mutableListOf<Pin>()
-                obterTamanhosImagens(listaImagens)
+
+//                obterTamanhosImagens(listaImagens)
+
 
                 val colunaEsquerda = mutableListOf<Pin>()
                 val colunaDireita = mutableListOf<Pin>()
                 organizaImagensColuna(listaImagens, colunaEsquerda, colunaDireita)
 
+
                 //área das imagens
                 Row(modifier = Modifier
                     .fillMaxWidth()
+                    .fillMaxHeight()
                     .padding(3.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                     )
