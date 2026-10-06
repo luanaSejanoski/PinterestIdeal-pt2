@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-28:12
-INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-28:12
-INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-28:12
-INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-28:12
+ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:1-33:12
 MERGED from [io.coil-kt:coil-compose:2.4.0] C:\Users\luana\.gradle\caches\transforms-3\b3c8e9b7c288c17c6f6c2921b024ece2\transformed\coil-compose-2.4.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose-base:2.4.0] C:\Users\luana\.gradle\caches\transforms-3\6d47c5dd6b0cd17d93028fd75dd90b14\transformed\coil-compose-base-2.4.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil:2.4.0] C:\Users\luana\.gradle\caches\transforms-3\f11c153fbd7cd2b55e7cc0764677cf68\transformed\coil-2.4.0\AndroidManifest.xml:2:1-7:12
@@ -68,8 +68,8 @@ MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\luana\.gradle\ca
 	xmlns:android
 		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:5:5-26:19
-INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:5:5-26:19
+ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:5:5-31:19
+INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:5:5-31:19
 MERGED from [androidx.compose.ui:ui-tooling:1.4.3] C:\Users\luana\.gradle\caches\transforms-3\bb8fdebf936e22c2266bb30c8f2ab024\transformed\ui-tooling-1.4.3\AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-tooling:1.4.3] C:\Users\luana\.gradle\caches\transforms-3\bb8fdebf936e22c2266bb30c8f2ab024\transformed\ui-tooling-1.4.3\AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.4.3] C:\Users\luana\.gradle\caches\transforms-3\c399063a615b4a0c28a7bee849748afe\transformed\ui-test-manifest-1.4.3\AndroidManifest.xml:22:5-26:19
@@ -108,7 +108,7 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\luana\.gradle\cach
 		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:13:9-51
 	android:dataExtractionRules
 		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:7:9-65
-activity#com.example.myapplication.EditarPerfil
+activity#com.example.myapplication.TelaPerfil
 ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:15:9-25:20
 	android:label
 		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:18:13-45
@@ -117,7 +117,7 @@ ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\
 	android:theme
 		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:19:13-55
 	android:name
-		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:16:13-41
+		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:16:13-39
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
 ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:20:13-24:29
 action#android.intent.action.MAIN
@@ -128,6 +128,14 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:23:17-77
 	android:name
 		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:23:27-74
+activity#com.example.myapplication.EditarPerfil
+ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:27:9-30:58
+	android:exported
+		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:29:13-37
+	android:theme
+		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:30:13-55
+	android:name
+		ADDED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml:28:13-41
 uses-sdk
 INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\luana\AndroidStudioProjects\PinterestIdeal-pt2\app\src\main\AndroidManifest.xml

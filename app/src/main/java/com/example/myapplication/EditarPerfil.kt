@@ -1,4 +1,5 @@
 package com.example.myapplication
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -46,6 +47,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import coil.compose.rememberAsyncImagePainter
 
 
@@ -190,12 +192,10 @@ fun geraBotao(x: Float, texto: String, habilitado: Boolean,
 @Preview(showBackground = true)
 @Composable
 fun TelaEditarPerfil(idUsuario: Int = 0) {
+    val context = LocalContext.current
 
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
 
-    if (usuario == null) {
-        return
-    }
 
         var nomeExibicao by remember { mutableStateOf(usuario.nomeExibicao) }
         var nomeUsuario by remember { mutableStateOf(usuario.nomeUsuario) }
@@ -204,6 +204,7 @@ fun TelaEditarPerfil(idUsuario: Int = 0) {
         var fotoPerfil by remember { mutableStateOf(usuario.foto) }
 
 
+    //seleciona foto da galeria
     val selecionarImagem = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -252,6 +253,10 @@ fun TelaEditarPerfil(idUsuario: Int = 0) {
                                     usuario, nomeExibicao, nomeUsuario,
                                     biografia, email, fotoPerfil
                                 )
+
+                                val intent = Intent(context, TelaPerfil::class.java)
+                                    .putExtra("ID_USUARIO",idUsuario)
+                                   context.startActivity(intent)
                             }
                         )
                 }
