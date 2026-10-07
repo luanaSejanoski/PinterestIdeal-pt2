@@ -1,7 +1,11 @@
 package com.example.myapplication
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +47,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
+import coil.compose.rememberAsyncImagePainter
 
 
 import com.example.myapplication.data.Dados
@@ -51,11 +57,12 @@ import com.example.myapplication.data.Dados
 class EditarPerfil : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val idUsuario = intent.getIntExtra("ID_USUARIO", 0)
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    TelaEditarPerfil()
+                    TelaEditarPerfil(idUsuario)
                 }
             }
         }
@@ -64,7 +71,7 @@ class EditarPerfil : ComponentActivity() {
 
 
 @Composable
-fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Int? = null, icon: Painter? = null){
+fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Any? = null, icon: Painter? = null){
     Surface(
         modifier = Modifier
             .requiredSize(x.dp)
@@ -74,13 +81,12 @@ fun gerarBloco(cor:Color?, x: Int, y: Int, z:Int? = null, imagem: Int? = null, i
     ) {
         if(imagem != null){
             Image(
-                painter = painterResource(id = imagem),
+                painter = rememberAsyncImagePainter(imagem),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         }
-
 
         if(icon != null){
             Icon(
@@ -97,7 +103,7 @@ fun gerarConteudoBloco(cor: Color? = null,
                        x: Int,
                        y: Int,
                        raio: Int? = 0,
-                       imagem: Int? = null,
+                       imagem: Any? = null,
                        icon: Painter? = null,
                        texto: String? = null,
                        corTexto: Color = Color.White
@@ -141,17 +147,18 @@ fun CampoEditar(nomeCampo: String,
     )
 }
 
-fun salvarAlteracoes(usuario: Usuario, nomeExibicao: String,
-                     nomeUsuario: String, biografia: String,
-                     email: String
+fun salvarAlteracoes(
+    usuario: Usuario, nomeExibicao: String,
+    nomeUsuario: String, biografia: String,
+    email: String, fotoPerfil: Uri?
 ){
    val usuarioAtualizado = usuario.copy(
        nomeExibicao = nomeExibicao,
        nomeUsuario = nomeUsuario,
        biografia = biografia,
-       email = email
+       email = email,
+       foto = fotoPerfil
    )
-
     val indice = Dados.usuarios.indexOfFirst {
        it.id == usuario.id
     }
@@ -161,9 +168,10 @@ fun salvarAlteracoes(usuario: Usuario, nomeExibicao: String,
     }
 }
 
-
 @Composable
-fun geraBotao(x: Float, texto: String, habilitado: Boolean, onclick: () -> Unit, ){
+fun geraBotao(x: Float, texto: String, habilitado: Boolean,
+              corHabilitado: Color = Color.DarkGray,
+              onclick: () -> Unit, ){
     Button(
         modifier = Modifier.fillMaxWidth(x),
         contentPadding = PaddingValues(horizontal = 3.dp, vertical = 4.dp),
@@ -171,8 +179,9 @@ fun geraBotao(x: Float, texto: String, habilitado: Boolean, onclick: () -> Unit,
         enabled = habilitado,
         shape = RoundedCornerShape(13.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red,
-            disabledContentColor = Color.LightGray,
+            containerColor = corHabilitado,
+            disabledContentColor = Color.White,
+            contentColor = Color.White,
             disabledContainerColor = Color.DarkGray
         )){
         Text(text = texto)
@@ -182,29 +191,27 @@ fun geraBotao(x: Float, texto: String, habilitado: Boolean, onclick: () -> Unit,
 
 @Preview(showBackground = true)
 @Composable
-fun TelaEditarPerfil() {
-    Dados.usuarios.add(
-        Usuario(
-            id = 0,
-            nomeExibicao = "Maria Silva",
-            nomeUsuario = "maria001",
-            biografia = "Amo fotografia 📷",
-            email = "maria@email.com",
-            foto = null
-        )
-    )
+fun TelaEditarPerfil(idUsuario: Int = 0) {
+    val context = LocalContext.current
 
-    val usuario = Dados.usuarios.find { it.id == 0 }
+    val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
 
-    if (usuario == null) {
-        return
-    }
 
         var nomeExibicao by remember { mutableStateOf(usuario.nomeExibicao) }
         var nomeUsuario by remember { mutableStateOf(usuario.nomeUsuario) }
         var biografia by remember { mutableStateOf(usuario.biografia) }
         var email by remember { mutableStateOf(usuario.email) }
         var fotoPerfil by remember { mutableStateOf(usuario.foto) }
+
+
+    //seleciona foto da galeria
+    val selecionarImagem = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if(uri != null){
+            fotoPerfil = uri
+        }
+    }
 
 
     Surface(modifier = Modifier
@@ -223,27 +230,28 @@ fun TelaEditarPerfil() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    gerarConteudoBloco(
-                        Color(0xFF1e1e1e),
-                        45,
-                        5,
-                        icon = painterResource(R.drawable.voltar)
-                    )
+                    BotaoVoltar()
                     Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
 
                     val habilitado =
                         nomeExibicao != usuario.nomeExibicao ||
                                 nomeUsuario != usuario.nomeUsuario ||
                                 biografia != usuario.biografia ||
-                                email != usuario.email
+                                email != usuario.email ||
+                                fotoPerfil != usuario.foto
 
                         geraBotao(0.25f, "Feito",
                             habilitado,
+                            corHabilitado = Color.Red,
                             onclick = {
                                 salvarAlteracoes(
                                     usuario, nomeExibicao, nomeUsuario,
-                                    biografia, email
+                                    biografia, email, fotoPerfil
                                 )
+
+                                val intent = Intent(context, TelaPerfil::class.java)
+                                    .putExtra("ID_USUARIO",idUsuario)
+                                   context.startActivity(intent)
                             }
                         )
                 }
@@ -262,9 +270,11 @@ fun TelaEditarPerfil() {
                             y = 5,
                             cor = Color.Red,
                             raio = 75,
-                            imagem = R.drawable.foto_perfil_editar
+                            imagem = fotoPerfil?: R.drawable.foto_perfil_editar
                         )
-                        geraBotao(0.2f, "Editar", habilitado = false) {}
+                        geraBotao(0.2f, "Editar", habilitado = true,
+                            onclick = {selecionarImagem.launch("image/*")}
+                        )
                     }
                 }
 

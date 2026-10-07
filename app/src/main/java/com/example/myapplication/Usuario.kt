@@ -10,7 +10,12 @@ data class Usuario(
     val email: String,
     val foto: Uri?,
 
-    val amigos: List<Int>
+    val amigos: MutableList<Int>?
+
+)
+
+
+
 //    val usuarios = listOf(
 //        Usuario(1, "João"),
 //        Usuario(2, "Maria"),
@@ -25,5 +30,5 @@ data class Usuario(
 //    )
 //    )
 
-)
+
 

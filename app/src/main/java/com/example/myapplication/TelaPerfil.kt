@@ -1,7 +1,8 @@
 package com.example.myapplication
 
-import android.R.attr.icon
+import android.content.Intent
 import android.os.Bundle
+import android.service.autofill.OnClickAction
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -22,10 +23,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -39,7 +38,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -52,17 +50,22 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import com.example.myapplication.data.Dados
 
 
 class TelaPerfil : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val idUsuario = intent.getIntExtra("ID_USUARIO", 0)
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MinhaTela()
+                    MinhaTela(idUsuario)
                 }
             }
         }
@@ -100,17 +103,19 @@ fun GeraBloco(cor: Color, altura: Int, largura: Int = altura, texto: String = ""
     }
 }
 @Composable
-fun gerarBotao(x: Float, texto: String){
-    var habilitado by remember { mutableStateOf(false) }
+fun gerarBotao(x: Float,
+               texto: String,
+               habilitado: Boolean,
+               onclick: () -> Unit = {}){
     Button(
         modifier = Modifier.fillMaxWidth(x),
         contentPadding = PaddingValues(horizontal = 3.dp, vertical = 3.dp),
-        onClick = {},
+        onClick = onclick,
         enabled = habilitado,
         shape = RoundedCornerShape(13.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red,
-            disabledContentColor = Color.White,
+            containerColor = Color.DarkGray,
+            contentColor = Color.White,
             disabledContainerColor = (Color(0xFF757575))
         )){
         Text(text = texto)
@@ -150,9 +155,13 @@ fun gararPasta(nomePasta: String, numeroPins: Int){
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun MinhaTela() {
+fun MinhaTela(idUsuario: Int = 0) {
+    val context  = LocalContext.current
+
+    val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
@@ -167,12 +176,11 @@ fun MinhaTela() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)
-//                    .background(Color(0xFF757575))
                         .height(60.dp)
                 ) {
                     Column {
                         Image(
-                            painter = painterResource(id = R.drawable.foto_perfil_editar),
+                            painter = rememberAsyncImagePainter(usuario.foto?: R.drawable.foto_perfil_editar),
                             contentDescription = "Foto de perfil",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -184,8 +192,8 @@ fun MinhaTela() {
                         modifier = Modifier.padding(start = 10.dp),
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        Text(text = "PinterestIdeal", color = Color.White, fontSize = 20.sp)
-                        Text(text = "pinterest_ideal", color = Color.White, fontSize = 15.sp)
+                        Text(text = "${usuario.nomeExibicao}", color = Color.White, fontSize = 20.sp)
+                        Text(text = "${usuario.nomeUsuario}", color = Color.White, fontSize = 15.sp)
                     }
                 }
             }
@@ -203,13 +211,13 @@ fun MinhaTela() {
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "3 amigos",
+                            text = "${usuario.amigos?.size} amigos",
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Sempre feliz usando o Pinterest Ideal <3",
+                            text = "${usuario.biografia}",
                             color = Color.White,
                             fontSize = 15.sp
                         )
@@ -227,7 +235,12 @@ fun MinhaTela() {
                     modifier = Modifier.fillMaxSize().padding(start = 30.dp),
                     shape = RoundedCornerShape(15.dp),
                 ) {
-                    gerarBotao(0.2f, "Editar perfil");
+                    gerarBotao(0.2f, "Editar perfil", habilitado = true,
+                        onclick = {
+                            val intent = Intent(context, EditarPerfil::class.java)
+                                .putExtra("ID_USUARIO", idUsuario)
+                                context.startActivity(intent)
+                        });
                 }
             }
             //área de pastas

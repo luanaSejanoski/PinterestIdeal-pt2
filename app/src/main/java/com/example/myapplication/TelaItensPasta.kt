@@ -113,32 +113,32 @@ fun gerarBlocoImagem(
     }
 }
 
-//PAREI AQUI
-@Composable
-fun obterTamanhosImagens( listaImagens: MutableList<Pin>) {
-    val context = LocalContext.current;
-
-    val uris = mutableListOf<Uri>()
-
-    listaImagens.forEach { imagem ->
-        uris.add(imagem.imagem)
-    }
-
-    //adiciona imagens na lista
-    uris.forEach { uri ->
-        //transforma o endereço da imagem(uri) e transforma em um drawable
-        val drawable = context.contentResolver
-            .openInputStream(uri)
-            ?.use {
-                Drawable.createFromStream(it, null)
-            }
-        val largura = drawable?.intrinsicWidth?: 0
-        val altura = drawable?.intrinsicHeight?: 0
-
-        val pin = Pin(uri,largura,altura)
-        listaImagens.add(pin)
-    }
-}
+//
+//@Composable
+//fun obterTamanhosImagens( listaImagens: MutableList<Pin>) {
+//    val context = LocalContext.current;
+//
+//    val uris = mutableListOf<Uri>()
+//
+//    listaImagens.forEach { imagem ->
+//        uris.add(imagem.imagem)
+//    }
+//
+//    //adiciona imagens na lista
+//    uris.forEach { uri ->
+//        //transforma o endereço da imagem(uri) e transforma em um drawable
+//        val drawable = context.contentResolver
+//            .openInputStream(uri)
+//            ?.use {
+//                Drawable.createFromStream(it, null)
+//            }
+//        val largura = drawable?.intrinsicWidth?: 0
+//        val altura = drawable?.intrinsicHeight?: 0
+//
+//        val pin = Pin(uri,largura,altura)
+//        listaImagens.add(pin)
+//    }
+//}
 
 
 fun organizaImagensColuna(
@@ -221,12 +221,7 @@ fun telaItensPasta() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    gerarConteudoBloco(
-                        Color(0xFF1e1e1e),
-                        45,
-                        5,
-                        icon = painterResource(R.drawable.voltar)
-                    )
+                   BotaoVoltar()
                 }
                 //informações da pasta
                 Row(
