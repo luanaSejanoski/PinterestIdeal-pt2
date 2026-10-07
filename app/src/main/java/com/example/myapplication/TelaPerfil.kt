@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.ui.draw.clip
@@ -123,14 +124,15 @@ fun gerarBotao(x: Float,
 }
 
 @Composable
-fun gararPasta(nomePasta: String, numeroPins: Int){
+fun gararPasta(nomePasta: String, numeroPins: Int, onclick: () -> Unit){
     Column(
     ) {
         Box(
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .background(Color.Transparent)
-                .size(height = 100.dp, width = 130.dp),
+                .size(height = 100.dp, width = 130.dp)
+                .clickable{onclick()},
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -279,44 +281,28 @@ fun MinhaTela(idUsuario: Int = 0) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2)
                 ) {
-
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            gararPasta("Paisagens", 3)
+                    
+                    Dados.pastas.forEach {
+                        pasta ->
+                        item {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                gararPasta(pasta.nome, pasta.pins.size,
+                                    onclick = {
+                                        val intent = Intent(context, TelaItensPasta::class.java)
+                                            .putExtra("ID_PASTA", pasta.id)
+                                        context.startActivity(intent)
+                                    })
+                            }
                         }
                     }
-
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            gararPasta("Rock", 2)
-                        }
-                    }
-
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            gararPasta("Wallpapers", 10)
-                        }
-                    }
-
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            gararPasta("Patinhos", 15)
-                        }
-                    }
-
                 }
+
+
+
+
                 //barra de opcoes no final
                 Box(
                     modifier = Modifier.fillMaxSize(),
