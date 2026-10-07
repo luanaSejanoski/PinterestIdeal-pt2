@@ -9,8 +9,7 @@ data class Usuario(
     val biografia: String,
     val email: String,
     val foto: Uri?,
-
-    val amigos: MutableList<Int>?
+    val amigos: MutableList<Int>
 
 )
 

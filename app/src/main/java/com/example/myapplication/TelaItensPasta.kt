@@ -43,32 +43,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.mutableStateListOf
 import coil.compose.rememberAsyncImagePainter
-
+import com.example.myapplication.data.Dados
+import com.example.myapplication.data.Dados.proximoIdPin
 
 
 class TelaItensPasta : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val idPasta = intent.getIntExtra("ID_PASTA", 0)
         setContent {
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    telaItensPasta()
+                    telaItensPasta(idPasta)
                 }
             }
         }
     }
 }
 
-data class Pin(
-    val imagem: Uri,
-    val largura: Int,
-    val altura: Int
-)
 
 @Composable
 fun gerarBlocoIcone(cor: Color? = null,
@@ -167,10 +162,12 @@ fun organizaImagensColuna(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun telaItensPasta() {
-        var nomePasta by remember { mutableStateOf("Nome_Pasta") }
+fun telaItensPasta(idPasta: Int = 0) {
+
+        val pasta = Dados.pastas.find{it.id == idPasta}?: return
+        var nomePasta by remember { mutableStateOf(pasta.nome) }
         var mostrarDialog by remember { mutableStateOf(false) }
         var novoNome by remember { mutableStateOf("") }
 
@@ -194,13 +191,16 @@ fun telaItensPasta() {
             val largura = drawable?.intrinsicWidth ?: 0
             val altura = drawable?.intrinsicHeight ?: 0
 
-            listaImagens.add(
-                Pin(
+
+             val novoPin = Pin(
+                    id = proximoIdPin(),
                     imagem = uri,
                     largura = largura,
                     altura = altura
                 )
-            )
+
+            Dados.pins.add(novoPin)
+            pasta.pins.add(novoPin.id)
         }
     }
 
@@ -289,7 +289,7 @@ fun telaItensPasta() {
                                 )
                             }
                             Row() {
-                                Text(text = "${listaImagens.size} Pins", color = Color.White)
+                                Text(text = "${pasta.pins.size} Pins", color = Color.White)
                             }
                         }
                     }
@@ -320,7 +320,8 @@ fun telaItensPasta() {
 
                 val colunaEsquerda = mutableListOf<Pin>()
                 val colunaDireita = mutableListOf<Pin>()
-                organizaImagensColuna(listaImagens, colunaEsquerda, colunaDireita)
+                val pinsDaPasta = Dados.pins.filter{ pin-> pin.id in pasta.pins }
+                organizaImagensColuna(pinsDaPasta, colunaEsquerda, colunaDireita)
 
 
                 //área das imagens
@@ -336,6 +337,9 @@ fun telaItensPasta() {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         colunaEsquerda.forEach { item ->
+                            println("URI DA IMAGEM: ${item.imagem}")
+                            println("LARGURA: ${item.largura}")
+                            println("ALTURA: ${item.altura}")
                             // Define a proporção da imagem para que ela mantenha suas medidas originais na tela
                            val proporcao = item.largura.toFloat() / item.altura.toFloat()
                             gerarBlocoImagem(item.imagem, proporcao)
