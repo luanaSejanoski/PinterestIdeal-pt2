@@ -159,6 +159,7 @@ fun salvarAlteracoes(
        email = email,
        foto = fotoPerfil
    )
+
     val indice = Dados.usuarios.indexOfFirst {
        it.id == usuario.id
     }
