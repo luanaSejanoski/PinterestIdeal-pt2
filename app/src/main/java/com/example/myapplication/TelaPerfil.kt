@@ -1,10 +1,6 @@
 package com.example.myapplication
 
-import android.content.Intent
-import android.os.Bundle
-import android.service.autofill.OnClickAction
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,35 +12,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -53,56 +33,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
+import androidx.navigation.NavHostController
 
 
-class TelaPerfil : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val idUsuario = intent.getIntExtra("ID_USUARIO", 0)
-        setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MinhaTela(idUsuario)
-                }
-            }
-        }
-    }
-}
 
-@Composable
-fun GeraBloco(cor: Color, altura: Int, largura: Int = altura, texto: String = "", icon: ImageVector ?= null){
-    Surface(
-        modifier = Modifier
-            .width(largura.dp)
-            .height(altura.dp)
-            .padding(5.dp),
-        color = cor,
-        shape = RoundedCornerShape(5.dp),
-    ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ){
-
-            if(icon != null){
-                Icon(
-                    imageVector = icon,
-                    contentDescription = texto,
-                    tint = Color.White,
-                    modifier = Modifier.size(60.dp)
-                )
-            }
-            else if(texto.isNotEmpty())
-                Text(text = texto,
-                    color = Color.White
-                )
-        }
-    }
-}
 @Composable
 fun gerarBotao(x: Float,
                texto: String,
@@ -157,9 +93,8 @@ fun gararPasta(nomePasta: String, numeroPins: Int, onclick: () -> Unit){
 }
 
 
-@Preview(showBackground = true)
 @Composable
-fun MinhaTela(idUsuario: Int = 0) {
+fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
     val context  = LocalContext.current
 
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
@@ -239,9 +174,10 @@ fun MinhaTela(idUsuario: Int = 0) {
                 ) {
                     gerarBotao(0.2f, "Editar perfil", habilitado = true,
                         onclick = {
-                            val intent = Intent(context, EditarPerfil::class.java)
-                                .putExtra("ID_USUARIO", idUsuario)
-                                context.startActivity(intent)
+                            navController.navigate(Rotas.EDITARPERFIL)
+//                            val intent = Intent(context, EditarPerfil::class.java)
+//                                .putExtra("ID_USUARIO", idUsuario)
+//                                context.startActivity(intent)
                         });
                 }
             }
@@ -291,61 +227,16 @@ fun MinhaTela(idUsuario: Int = 0) {
                             ) {
                                 gararPasta(pasta.nome, pasta.pins.size,
                                     onclick = {
-                                        val intent = Intent(context, TelaItensPasta::class.java)
-                                            .putExtra("ID_PASTA", pasta.id)
-                                        context.startActivity(intent)
+
+                                        navController.navigate(
+                                          Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
+                                        )
+//                                        val intent = Intent(context, TelaItensPasta::class.java)
+//                                            .putExtra("ID_PASTA", pasta.id)
+//                                        context.startActivity(intent)
                                     })
                             }
                         }
-                    }
-                }
-
-
-
-
-                //barra de opcoes no final
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp)
-                            .background(Color(0xFF757575))
-                            .padding(vertical = 5.dp),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Home,
-                            contentDescription = "Inicio",
-                            tint = Color.White,
-                            modifier = Modifier.size(35.dp)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Pesquisar",
-                            tint = Color.White,
-                            modifier = Modifier.size(35.dp)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Adicionar",
-                            tint = Color.White,
-                            modifier = Modifier.size(35.dp)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.Send,
-                            contentDescription = "Mensagem",
-                            tint = Color.White,
-                            modifier = Modifier.size(35.dp)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Perfil",
-                            tint = Color.White,
-                            modifier = Modifier.size(35.dp)
-                        )
                     }
                 }
             }

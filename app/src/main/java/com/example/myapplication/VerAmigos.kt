@@ -3,7 +3,7 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.camera.core.Preview
+//import androidx.camera.core.Preview
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,7 +58,7 @@ fun TelaVerAmigos(){
         Row(
             modifier = Modifier.padding(it)
         ) {
-            BarraPesquisa()
+            //BarraPesquisa()
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -44,27 +45,11 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.mutableStateListOf
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import com.example.myapplication.data.Dados.proximoIdPin
 import com.example.myapplication.data.Pasta
-
-
-class TelaItensPasta : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val idPasta = intent.getIntExtra("ID_PASTA", 0)
-        setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    telaItensPasta(idPasta)
-                }
-            }
-        }
-    }
-}
-
 
 @Composable
 fun gerarBlocoIcone(cor: Color? = null,
@@ -179,9 +164,9 @@ fun salvarNomePasta(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+
 @Composable
-fun telaItensPasta(idPasta: Int = 0) {
+fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
 
         val pasta = Dados.pastas.find{it.id == idPasta}?: return
         var nomePasta by remember { mutableStateOf(pasta.nome) }
@@ -238,7 +223,7 @@ fun telaItensPasta(idPasta: Int = 0) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                   BotaoVoltar()
+                   BotaoVoltar(navController = navController)
                 }
                 //informações da pasta
                 Row(
@@ -341,6 +326,14 @@ fun telaItensPasta(idPasta: Int = 0) {
                                         onClick = {
                                             mostrarDialogoExcluir = false
                                             Dados.pastas.remove(pasta)
+
+                                            Toast.makeText(
+                                                context,
+                                                "Pasta removida!",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+
+                                            navController.popBackStack()
                                         }
                                     ) {
                                         Text("Confirmar")
