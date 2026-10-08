@@ -47,6 +47,7 @@ import androidx.compose.runtime.mutableStateListOf
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import com.example.myapplication.data.Dados.proximoIdPin
+import com.example.myapplication.data.Pasta
 
 
 class TelaItensPasta : ComponentActivity() {
@@ -159,6 +160,22 @@ fun organizaImagensColuna(
     }
 }
 
+fun salvarNomePasta(
+    pasta: Pasta,
+    nomePasta: String
+){
+    val nomePastatualizada = pasta.copy(
+     nome = nomePasta
+    )
+
+    val indice = Dados.usuarios.indexOfFirst {
+        it.id == pasta.id
+    }
+
+    if(indice != -1){
+        Dados.pastas[indice] = nomePastatualizada
+    }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -168,13 +185,13 @@ fun telaItensPasta(idPasta: Int = 0) {
 
         val pasta = Dados.pastas.find{it.id == idPasta}?: return
         var nomePasta by remember { mutableStateOf(pasta.nome) }
-        var mostrarDialog by remember { mutableStateOf(false) }
+        var mostrarDialogoMudarNome by remember { mutableStateOf(false) }
+        var mostrarDialogoExcluir by remember { mutableStateOf(false) }
         var novoNome by remember { mutableStateOf("") }
 
 
     val context = LocalContext.current
 
-    val listaImagens = remember { mutableStateListOf<Pin>() }
 
     val selecionarImagens = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents()
@@ -242,14 +259,14 @@ fun telaItensPasta(idPasta: Int = 0) {
                                     icon = painterResource(R.drawable.editar),
                                     onClick = {
                                         novoNome = nomePasta
-                                        mostrarDialog = true
+                                        mostrarDialogoMudarNome = true
                                     }
                                 )
                             }
-                            if (mostrarDialog) {
+                            if (mostrarDialogoMudarNome) {
                                 AlertDialog(
                                     onDismissRequest = {
-                                        mostrarDialog = false
+                                        mostrarDialogoMudarNome = false
                                     },
 
                                     title = {
@@ -270,7 +287,8 @@ fun telaItensPasta(idPasta: Int = 0) {
                                         TextButton(
                                             onClick = {
                                                 nomePasta = novoNome
-                                                mostrarDialog = false
+                                                mostrarDialogoMudarNome = false
+                                                salvarNomePasta(pasta, nomePasta)
                                             }
                                         ) {
                                             Text("Salvar")
@@ -280,7 +298,7 @@ fun telaItensPasta(idPasta: Int = 0) {
                                     dismissButton = {
                                         TextButton(
                                             onClick = {
-                                                mostrarDialog = false
+                                                mostrarDialogoMudarNome = false
                                             }
                                         ) {
                                             Text("Cancelar")
@@ -306,8 +324,37 @@ fun telaItensPasta(idPasta: Int = 0) {
                             Color(0xFF1e1e1e),
                             30,
                             5,
-                            icon = painterResource(R.drawable.excluir)
+                            icon = painterResource(R.drawable.excluir),
+                            onClick = {
+                                    mostrarDialogoExcluir = true
+                                    }
                         )
+
+
+                        if (mostrarDialogoExcluir) {
+                            AlertDialog(
+                                onDismissRequest = { mostrarDialogoExcluir = false },
+                                title = { Text("Excluir pasta") },
+                                text = { Text("Tem certeza de que deseja excluir essa pasta?") },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            mostrarDialogoExcluir = false
+                                            Dados.pastas.remove(pasta)
+                                        }
+                                    ) {
+                                        Text("Confirmar")
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = { mostrarDialogoExcluir = false }
+                                    ) {
+                                        Text("Cancelar")
+                                    }
+                                }
+                            )
+                        }
                     }
                 }
 
