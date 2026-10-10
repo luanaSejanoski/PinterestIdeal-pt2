@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.net.Uri
+import androidx.compose.runtime.mutableStateListOf
 
 data class Usuario(
     val id: Int,
@@ -9,7 +10,7 @@ data class Usuario(
     val biografia: String,
     val email: String,
     val foto: Uri?,
-    val amigos: MutableList<Int> = mutableListOf()
+    val amigos: MutableList<Int> = mutableStateListOf()
 )
 
 

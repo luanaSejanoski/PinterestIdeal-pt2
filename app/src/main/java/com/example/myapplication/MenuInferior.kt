@@ -49,7 +49,7 @@ fun MenuInferior(navController: NavHostController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate(Rotas.HOME)
+                navController.navigate(Rotas.PESQUISAR_PESSOAS)
             },
             icon = {
                 Icon(
@@ -63,7 +63,7 @@ fun MenuInferior(navController: NavHostController) {
         NavigationBarItem(
             selected = false,
             onClick = {
-                navController.navigate(Rotas.HOME)
+                navController.navigate(Rotas.CRIAR_PASTA)
             },
             icon = {
                 Icon(
