@@ -53,7 +53,7 @@ import coil.compose.rememberAsyncImagePainter
 
 
 import com.example.myapplication.data.Dados
-
+import kotlin.math.sin
 
 
 @Composable
@@ -107,6 +107,7 @@ fun gerarConteudoBloco(cor: Color? = null,
 @Composable
 fun CampoEditar(nomeCampo: String,
                 valor: String?,
+                singleline: Boolean,
                 onValueChange: (String) -> Unit){
     var focado by remember { mutableStateOf(false) }
     TextField(
@@ -121,6 +122,7 @@ fun CampoEditar(nomeCampo: String,
         value = valor?: "",
         onValueChange = {novoNome -> onValueChange(novoNome)},
         label = { Text(text = nomeCampo)},
+        singleLine = singleline,
         colors = TextFieldDefaults.textFieldColors(
             containerColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -179,7 +181,6 @@ fun geraBotao(x: Float, texto: String, habilitado: Boolean,
 
 @Composable
 fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
-    val context = LocalContext.current
 
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
 
@@ -237,9 +238,6 @@ fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
                                 )
 
                                 navController.navigate(Rotas.HOME)
-//                                val intent = Intent(context, TelaPerfil::class.java)
-//                                    .putExtra("ID_USUARIO",idUsuario)
-//                                   context.startActivity(intent)
                             }
                         )
                 }
@@ -280,17 +278,26 @@ fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
                     ) {
                         CampoEditar("Nome",
                             nomeExibicao,
+                            singleline = true,
                             onValueChange = { novoValor ->
                             nomeExibicao = novoValor
                         })
-                        CampoEditar("Nome de usuário",
+                        CampoEditar(
+                            "Nome de usuário",
                             nomeUsuario,
+                            singleline = true,
                             onValueChange = {novoValor -> nomeUsuario = novoValor})
-                        CampoEditar("Biografia",
+
+                        CampoEditar(
+                            "Biografia",
                             biografia,
+                            singleline = false,
                             onValueChange = {novoValor -> biografia = novoValor})
-                        CampoEditar("Email",
+
+                        CampoEditar(
+                            "Email",
                             email,
+                            singleline = true,
                             onValueChange = {novoValor -> email = novoValor})
                     }
                 }
