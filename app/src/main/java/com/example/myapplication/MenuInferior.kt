@@ -21,45 +21,70 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavHostController
 
 @Composable
-fun MenuInferior(modifier: Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(Color(0xFF757575))
-            .padding(vertical = 5.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.CenterVertically
-    )  {
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "Pesquisar",
-            tint = Color.White,
-            modifier = Modifier.size(35.dp)
+fun MenuInferior(navController: NavHostController) {
+
+    NavigationBar(
+        containerColor = Color(0xFF757575)
+    ) {
+        NavigationBarItem(
+            selected = true,
+            onClick = {
+                navController.navigate(Rotas.HOME)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Tela inicial",
+                    tint = Color.White
+                )
+            }
         )
 
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Adicionar",
-            tint = Color.White,
-            modifier = Modifier.size(35.dp)
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(Rotas.HOME)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Pesquisar pessoas",
+                    tint = Color.White,
+                )
+            }
         )
 
-        Icon(
-            painter = painterResource(id = R.drawable.icon_msg),
-            contentDescription = "Mensagem",
-            tint = Color.White,
-            modifier = Modifier.size(35.dp)
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(Rotas.HOME)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Criar pasta",
+                    tint = Color.White
+                )
+            }
         )
 
-        Icon(
-            imageVector = Icons.Default.AccountCircle,
-            contentDescription = "Perfil",
-            tint = Color.White,
-            modifier = Modifier.size(35.dp)
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                navController.navigate(Rotas.HOME)
+            },
+            icon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_msg),
+                    contentDescription = "Mensagem",
+                )
+            }
         )
     }
 }

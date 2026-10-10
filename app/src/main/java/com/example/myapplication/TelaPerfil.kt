@@ -177,9 +177,6 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                     gerarBotao(0.2f, "Editar perfil", habilitado = true,
                         onclick = {
                             navController.navigate(Rotas.EDITARPERFIL)
-//                            val intent = Intent(context, EditarPerfil::class.java)
-//                                .putExtra("ID_USUARIO", idUsuario)
-//                                context.startActivity(intent)
                         });
                 }
             }

@@ -58,7 +58,7 @@ fun TelaVerAmigos(){
         Row(
             modifier = Modifier.padding(it)
         ) {
-            BarraPesquisa()
+          //  BarraPesquisa()
         }
     }
 }
