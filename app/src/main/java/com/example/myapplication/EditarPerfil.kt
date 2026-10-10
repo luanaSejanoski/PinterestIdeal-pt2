@@ -48,26 +48,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 
 
 import com.example.myapplication.data.Dados
 
-
-class EditarPerfil : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val idUsuario = intent.getIntExtra("ID_USUARIO", 0)
-        setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    TelaEditarPerfil(idUsuario)
-                }
-            }
-        }
-    }
-}
 
 
 @Composable
@@ -190,9 +176,9 @@ fun geraBotao(x: Float, texto: String, habilitado: Boolean,
 }
 
 
-@Preview(showBackground = true)
+
 @Composable
-fun TelaEditarPerfil(idUsuario: Int = 0) {
+fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
     val context = LocalContext.current
 
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
@@ -231,7 +217,7 @@ fun TelaEditarPerfil(idUsuario: Int = 0) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    BotaoVoltar()
+                    BotaoVoltar(navController=navController)
                     Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
 
                     val habilitado =
@@ -250,9 +236,10 @@ fun TelaEditarPerfil(idUsuario: Int = 0) {
                                     biografia, email, fotoPerfil
                                 )
 
-                                val intent = Intent(context, TelaPerfil::class.java)
-                                    .putExtra("ID_USUARIO",idUsuario)
-                                   context.startActivity(intent)
+                                navController.navigate(Rotas.HOME)
+//                                val intent = Intent(context, TelaPerfil::class.java)
+//                                    .putExtra("ID_USUARIO",idUsuario)
+//                                   context.startActivity(intent)
                             }
                         )
                 }

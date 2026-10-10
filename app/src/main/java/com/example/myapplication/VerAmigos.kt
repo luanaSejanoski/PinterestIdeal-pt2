@@ -52,13 +52,13 @@ class VerAmigos : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TelaVerAmigos(){
-//    Scaffold(
-//
-//    ){
-//        Row(
-//            modifier = Modifier.padding(it)
-//        ) {
-//            BarraPesquisa()
-//        }
-//    }
+    Scaffold(
+
+    ){
+        Row(
+            modifier = Modifier.padding(it)
+        ) {
+            BarraPesquisa()
+        }
+    }
 }

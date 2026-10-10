@@ -24,15 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".EditarPerfil"
-            android:exported="false"
-            android:theme="@style/Theme.MyApplication" />
-
-        <activity
-            android:name=".TelaItensPasta"
-            android:exported="false"
-            android:theme="@style/Theme.MyApplication" />
     </application>
 
 </manifest>

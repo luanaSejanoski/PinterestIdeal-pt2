@@ -21,31 +21,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 
 
 @Composable
 fun BotaoVoltar( modifier: Modifier = Modifier,
-                 onClick: (() -> Unit)? = null){
-    val context = LocalContext.current
+                 navController: NavController,
+                 onClick: (() -> Unit)? = null) {
+
     Box(
         modifier = modifier
             .requiredSize(45.dp)
             .padding(5.dp)
             .clickable {
-                if(onClick != null) onClick()
-                else(context as? Activity)?.finish()
+                if (onClick != null) onClick()
+                else navController.popBackStack()
             }
     ) {
-            Icon(
-                painter = painterResource(R.drawable.voltar),
-                contentDescription = null,
-                tint = Color.White
-            )
+        Icon(
+            painter = painterResource(R.drawable.voltar),
+            contentDescription = null,
+            tint = Color.White
+        )
 
     }
-
-
 
 
 }
