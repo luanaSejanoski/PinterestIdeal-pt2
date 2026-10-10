@@ -29,10 +29,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import androidx.navigation.NavHostController
@@ -95,7 +97,6 @@ fun gararPasta(nomePasta: String, numeroPins: Int, onclick: () -> Unit){
 
 @Composable
 fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
-    val context  = LocalContext.current
 
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
 
@@ -154,9 +155,10 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${usuario.biografia}",
+                            text = "${usuario.biografia}".take(50),
                             color = Color.White,
-                            fontSize = 15.sp
+                            fontSize = 15.sp,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
 
@@ -221,6 +223,11 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                     Dados.pastas.forEach {
                         pasta ->
                         item {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                        colors = CardDefaults.cardColors(
+                                        containerColor = Color.Transparent)
+                            ) {
                             Box(
                                 modifier = Modifier.fillMaxWidth(),
                                 contentAlignment = Alignment.Center
@@ -231,11 +238,9 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                                         navController.navigate(
                                           Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
                                         )
-//                                        val intent = Intent(context, TelaItensPasta::class.java)
-//                                            .putExtra("ID_PASTA", pasta.id)
-//                                        context.startActivity(intent)
                                     })
                             }
+                                }
                         }
                     }
                 }
