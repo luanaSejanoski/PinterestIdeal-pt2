@@ -62,34 +62,6 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun TelaPesquisa() {
-
-        val usuarios = listOf(
-            Usuario(
-                id = 1,
-                nomeExibicao = "Luana",
-                nomeUsuario = "luanabanana",
-                biografia = "",
-                email = "",
-                foto = null
-            ),
-            Usuario(
-                id = 2,
-                nomeExibicao = "Leticia",
-                nomeUsuario = "let_07",
-                biografia = "",
-                email = "",
-                foto = null
-            ),
-            Usuario(
-                id = 3,
-                nomeExibicao = "Maria",
-                nomeUsuario = "mariaria_franca",
-                biografia = "",
-                email = "",
-                foto = null
-            )
-        )
-
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = Color(0xFF1e1e1e)
@@ -109,8 +81,11 @@ fun TelaPesquisa() {
 
                     BarraPesquisa(
                         usuarios = usuarios,
+                        usuarioLogado = usuarioLogado,
                         onAdicionarAmigo = { usuario ->
-                            println("Adicionando ${usuario.nomeExibicao}")
+                            if (usuario.id !in usuarioLogado.amigos) {
+                                usuarioLogado.amigos.add(usuario.id)
+                            }
                         }
                     )
                 }
@@ -130,9 +105,7 @@ fun TelaPesquisa() {
         Button(
             modifier = Modifier.fillMaxWidth(x),
             contentPadding = PaddingValues(horizontal = 3.dp, vertical = 3.dp),
-            onClick = {
-
-            },
+            onClick = onClick,
             enabled = habilitado,
             shape = RoundedCornerShape(13.dp),
             colors = ButtonDefaults.buttonColors(
@@ -150,6 +123,7 @@ fun TelaPesquisa() {
 @Composable
 fun BarraPesquisa(
     usuarios: List<Usuario>,
+    usuarioLogado: Usuario,
     onAdicionarAmigo: (Usuario) -> Unit
 ) {
     var pesquisarP by remember { mutableStateOf("") }
@@ -160,7 +134,6 @@ fun BarraPesquisa(
     }
 
     Column {
-
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,36 +185,38 @@ fun BarraPesquisa(
         usuariosFiltrados.forEach { usuario ->
 
             Usuarios(
-                nome = usuario.nomeExibicao,
-                usuario = usuario.nomeUsuario,
-                imagem = R.drawable.user
+                usuario = usuario,
+                usuarioLogado = usuarioLogado,
+                imagem = R.drawable.user,
+                onAdicionarAmigo = onAdicionarAmigo
             )
         }
     }
 }
 
     @Composable
-    fun Usuarios(nome: String, usuario: String, imagem: Int? = null) {
+    fun Usuarios(usuario: Usuario,
+                 usuarioLogado: Usuario,
+                 imagem: Int? = null,
+                 onAdicionarAmigo: (Usuario) -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-
+        ) {
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 // Avatar (circulo)
                 Surface(
                     modifier = Modifier.size(40.dp),
                     color = Color.White,
                     shape = CircleShape
                 ) {
-
 
                     if (imagem != null) {
                         Image(
@@ -256,16 +231,16 @@ fun BarraPesquisa(
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Column {
-                    Text(text = nome, color = Color.White)
-                    Text(text = "@$usuario", color = Color.White)
+                    Text(text = usuario.nomeExibicao, color = Color.White)
+                    Text(text = "@${usuario.nomeUsuario}", color = Color.White)
                 }
-
             }
+
             criaBotao(
                 0.25f,
                 "Adicionar",
                 onClick = {
-                    // adicionar amigo
+                    onAdicionarAmigo(usuario)
                 }
             )
         }
