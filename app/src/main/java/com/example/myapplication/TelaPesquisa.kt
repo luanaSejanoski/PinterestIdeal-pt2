@@ -115,7 +115,9 @@ fun TelaPesquisar() {
                     )
                 }
 
-
+                MenuInferior(
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
             }
         }
     }
