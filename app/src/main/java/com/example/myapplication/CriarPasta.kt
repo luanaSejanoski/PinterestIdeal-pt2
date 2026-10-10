@@ -45,27 +45,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.navigation.NavController
 import com.example.myapplication.data.Dados
+import com.example.myapplication.data.Dados.proximoIdPasta
 import com.example.myapplication.data.Pasta
 
-class CriarPasta : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    TelaCriarPasta()
-                }
-            }
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun TelaCriarPasta(){
+fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
+
+    val usuario = Dados.usuarios.find { it.id == idUsuario }?: return;
 
     var nomePasta by remember { mutableStateOf("") }
     var descricao by remember { mutableStateOf("") }
@@ -87,12 +77,8 @@ fun TelaCriarPasta(){
                     .padding(horizontal = 5.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Voltar",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
+                BotaoVoltar(navController = navController,
+                    onClick = {navController.navigate(Rotas.HOME)})
 
                 Text(
                     text = "Criar uma Pasta",
@@ -185,13 +171,14 @@ fun TelaCriarPasta(){
                 }
             }
 
-            val novaPasta = Pasta(0, nomePasta, descricao)
+            val novaPasta = Pasta(proximoIdPasta(), nomePasta, descricao)
 
             BtnCriarPasta(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onClick = {
                     Dados.pastas.add(novaPasta)
                     Dados.pastas.forEach { println(novaPasta) }
+                    navController.navigate(Rotas.HOME)
 
                 }
             )

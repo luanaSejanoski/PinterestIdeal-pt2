@@ -14,6 +14,7 @@ object Rotas{
      const val DETALHES_PASTA = "detalhesPasta/{idPasta}"
      const val EDITARPERFIL = "editarPerfil/0"
      const val PESQUISAR_PESSOAS = "pesquisarPerfil/0"
+     const val CRIAR_PASTA = "criarPasta/0"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,9 +43,14 @@ fun AppNavigation(navController: NavHostController) {
                     val idPasta = entrada.arguments?.getString("idPasta")?.toIntOrNull() ?: 0
                     TelaItensPasta(navController, idPasta = idPasta)
                }
-               composable(Rotas.PESQUISAR_PESSOAS){}
-               TelaPesquisa()
+               composable(Rotas.PESQUISAR_PESSOAS){
+                    TelaPesquisa(navController)
+               }
 
+               composable(Rotas.CRIAR_PASTA){
+                    TelaCriarPasta(navController)
+
+               }
           }
      }
 }
