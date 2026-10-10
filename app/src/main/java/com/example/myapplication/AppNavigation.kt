@@ -15,6 +15,7 @@ object Rotas{
      const val EDITARPERFIL = "editarPerfil/0"
      const val PESQUISAR_PESSOAS = "pesquisarPerfil/0"
      const val CRIAR_PASTA = "criarPasta/0"
+     const val MENSAGENS = "mensagens/0"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +50,9 @@ fun AppNavigation(navController: NavHostController) {
 
                composable(Rotas.CRIAR_PASTA){
                     TelaCriarPasta(navController)
-
+               }
+               composable(Rotas.MENSAGENS){
+                    TelaMsg(navController)
                }
           }
      }

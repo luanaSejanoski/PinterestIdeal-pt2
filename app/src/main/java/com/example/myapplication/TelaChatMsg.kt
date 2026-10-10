@@ -56,31 +56,14 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.LaunchedEffect
-
-
-
+import androidx.navigation.NavController
 
 
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 
-class TelaChatMsg : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    TelaMsg()
-                }
-            }
-        }
-    }
-}
-
-@Preview
 @Composable
-fun TelaMsg() {
+fun TelaMsg(navController: NavController) {
 
     var mensagem by remember {
         mutableStateOf("")
