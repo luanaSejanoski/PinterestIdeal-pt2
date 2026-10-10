@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,6 +44,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.key
+import com.example.myapplication.data.Dados
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class TelaPesquisa : ComponentActivity() {
@@ -61,34 +64,9 @@ class TelaPesquisa : ComponentActivity() {
 
 @Preview
 @Composable
-fun TelaPesquisar() {
+fun TelaPesquisar(idUsuario: Int = 0) {
 
-        val usuarios = listOf(
-            Usuario(
-                id = 1,
-                nomeExibicao = "Luana",
-                nomeUsuario = "luanabanana",
-                biografia = "",
-                email = "",
-                foto = null
-            ),
-            Usuario(
-                id = 2,
-                nomeExibicao = "Leticia",
-                nomeUsuario = "let_07",
-                biografia = "",
-                email = "",
-                foto = null
-            ),
-            Usuario(
-                id = 3,
-                nomeExibicao = "Maria",
-                nomeUsuario = "mariaria_franca",
-                biografia = "",
-                email = "",
-                foto = null
-            )
-        )
+val usuario = Dados.usuarios.find{it.id == idUsuario}?: return;
 
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -108,13 +86,18 @@ fun TelaPesquisar() {
                     Spacer(modifier = Modifier.height(40.dp))
 
                     BarraPesquisa(
-                        usuarios = usuarios,
+                        usuarios = Dados.usuarios,
+                        usuarioLogado = usuario,
                         onAdicionarAmigo = { usuario ->
-                            println("Adicionando ${usuario.nomeExibicao}")
+                            if (
+                                usuario.id != usuario.id &&
+                                usuario.id !in usuario.amigos
+                            ) {
+                                usuario.amigos.add(usuario.id)
+                            }
                         }
                     )
                 }
-
                 MenuInferior(
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
@@ -125,23 +108,22 @@ fun TelaPesquisar() {
     @Composable
     fun criaBotao(x: Float,
                   texto: String,
+                  adicionado: Boolean,
                   onClick: () -> Unit) {
-        var habilitado by remember { mutableStateOf(false) }
+
         Button(
             modifier = Modifier.fillMaxWidth(x),
             contentPadding = PaddingValues(horizontal = 3.dp, vertical = 3.dp),
-            onClick = {
-
-            },
-            enabled = habilitado,
+            onClick = onClick,
+            enabled = !adicionado,
             shape = RoundedCornerShape(13.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red,
+                containerColor = if (adicionado) Color.Gray else Color.Red,
                 disabledContentColor = Color.LightGray,
                 disabledContainerColor = Color.DarkGray
             )
         ) {
-            Text(text = texto)
+            Text(text = if(adicionado) "Adicionado" else texto)
         }
     }
 
@@ -150,7 +132,8 @@ fun TelaPesquisar() {
 @Composable
 fun BarraPesquisa(
     usuarios: List<Usuario>,
-    onAdicionarAmigo: (Usuario) -> Unit
+    onAdicionarAmigo: (Usuario) -> Unit,
+    usuarioLogado: Usuario,
 ) {
     var pesquisarP by remember { mutableStateOf("") }
 
@@ -160,7 +143,6 @@ fun BarraPesquisa(
     }
 
     Column {
-
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -210,18 +192,23 @@ fun BarraPesquisa(
 
         // Usuários encontrados
         usuariosFiltrados.forEach { usuario ->
-
-            Usuarios(
-                nome = usuario.nomeExibicao,
-                usuario = usuario.nomeUsuario,
-                imagem = R.drawable.user
-            )
+                key(usuario.id) {
+                Usuarios(
+                    usuario = usuario,
+                    usuarioLogado = usuarioLogado,
+                    imagem = R.drawable.user,
+                    onAdicionarAmigo = onAdicionarAmigo
+                )
+            }
         }
     }
 }
 
     @Composable
-    fun Usuarios(nome: String, usuario: String, imagem: Int? = null) {
+    fun Usuarios(usuario: Usuario,
+                 usuarioLogado: Usuario,
+                 imagem: Int? = null,
+                 onAdicionarAmigo: (Usuario) -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -230,7 +217,9 @@ fun BarraPesquisa(
             horizontalArrangement = Arrangement.SpaceBetween
         )
         {
-
+            var adicionado by remember(usuario.id) {
+                mutableStateOf(usuario.id in usuarioLogado.amigos)
+            }
             Row(
                 modifier = Modifier.weight(1f),
                 verticalAlignment = Alignment.CenterVertically
@@ -241,8 +230,6 @@ fun BarraPesquisa(
                     color = Color.White,
                     shape = CircleShape
                 ) {
-
-
                     if (imagem != null) {
                         Image(
                             painter = painterResource(id = imagem),
@@ -256,18 +243,33 @@ fun BarraPesquisa(
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Column {
-                    Text(text = nome, color = Color.White)
-                    Text(text = "@$usuario", color = Color.White)
+                    Text(text = usuario.nomeExibicao, color = Color.White)
+                    Text(text = "@${usuario.nomeUsuario}", color = Color.White)
                 }
 
             }
-            criaBotao(
-                0.25f,
-                "Adicionar",
-                onClick = {
-                    // adicionar amigo
-                }
-            )
+            if(usuario.id != usuarioLogado.id ) {
+
+                criaBotao(
+                    x = 0.25f,
+                    texto = "Adicionar",
+                    adicionado = adicionado,
+                    onClick = {
+                        println("Usuário clicado: ${usuario.nomeExibicao}, ID: ${usuario.id}")
+
+                        if (
+                            usuario.id != usuarioLogado.id &&
+                            usuario.id !in usuarioLogado.amigos
+                        ) {
+                            onAdicionarAmigo(usuario)
+                            adicionado = true
+                        }
+                    }
+                )
+            }
         }
     }
+
+
+
 

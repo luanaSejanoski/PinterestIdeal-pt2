@@ -12,7 +12,9 @@ object Dados {
     //var usuarios = mutableListOf<Usuario>()
     val usuarios = mutableStateListOf(
         Usuario(0, "Maria Silva", "maria001", "Amo fotografia 📷", "maria@email.com", null, mutableListOf(1)),
-        Usuario(1, "João Souza", "joao002", "", "joao@email.com", null, mutableListOf(0))
+        Usuario(1, "João Souza", "joao002", "", "joao@email.com", null, mutableListOf(0)),
+        Usuario(2, "Juca", "Juquinha2", "", "juquinha@email.com", null, mutableListOf(0))
+
     )
 
     val pastas = mutableStateListOf(
