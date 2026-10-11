@@ -1,208 +1,193 @@
 
 package com.example.myapplication
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.navigation.NavController
-
-
-import com.example.myapplication.ui.theme.MyApplicationTheme
-
+import com.example.myapplication.data.Dados
 
 @Composable
 fun TelaMsg(navController: NavController) {
 
-    var mensagem by remember {
-        mutableStateOf("")
-    }
+    var mensagem by remember { mutableStateOf("") }
 
-    var mensagens by remember {
-        mutableStateOf(listOf<String>())
-    }
+    // Lista compartilhada entre telas
+    val mensagens = Dados.mensagens
+
+    // Usuários fixos para teste
+    val remetente = Dados.usuarios.find { it.id == 0 }
+    val destinatario = Dados.usuarios.find { it.id == 1 }
 
     val listaState = rememberLazyListState()
 
+    var proximoId by remember {
+        mutableIntStateOf(
+            (mensagens.maxOfOrNull { it.id } ?: 0) + 1
+        )
+    }
+
+    // Enviar mensagem
+    fun enviarMensagem() {
+        if (mensagem.isNotBlank()) {
+            if (remetente != null && destinatario != null) {
+                mensagens.add(
+                    Mensagem(
+                        id = proximoId++,
+                        texto = mensagem.trim(),
+                        remetente = remetente,
+                        destinatario = destinatario
+                    )
+                )
+
+                mensagem = ""
+            }
+        }
+    }
+
+    // vai para a mensagem mais recente
     LaunchedEffect(mensagens.size) {
         if (mensagens.isNotEmpty()) {
-            listaState.animateScrollToItem(mensagens.lastIndex)
+            listaState.animateScrollToItem(0)
         }
     }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF1e1e1e)
+        color = Color(0xFF1E1E1E)
     ) {
-
-        Box(
+        Column(
             modifier = Modifier.fillMaxSize()
         ) {
 
+            // Cabeçalho
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 20.dp),
+                    .background(Color(0xFF2C2C2C))
+                    .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BotaoVoltar(navController = navController,
-                    onClick = {navController.navigate(Rotas.HOME)})
+                IconButton(
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = "Voltar",
+                        tint = Color.White
+                    )
+                }
 
                 Text(
                     text = "Mensagem",
                     color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+                    fontSize = 20.sp
                 )
             }
 
+            // Mensagens começando de baixo
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        top = 80.dp,
-                        bottom = 100.dp,
-                        end = 20.dp
-                    ),
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
                 state = listaState,
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.End
+                reverseLayout = true,
+                verticalArrangement = Arrangement.spacedBy(
+                    8.dp,
+                    Alignment.Bottom
+                ),
+                contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-
-                items(mensagens.size) { index ->
-
-                    val mensagemEnviada = mensagens[index]
-
-                    Surface(
-                        modifier = Modifier
-                            .padding(vertical = 5.dp)
-                            .widthIn(
-                                min = 90.dp,
-                                max = 250.dp
-                            ),
-                        color = Color.Transparent,
-                        shape = RoundedCornerShape(18.dp),
-                        border = BorderStroke(
-                            1.dp,
-                            Color.White
-                        )
+                items(mensagens.reversed()) { mensagemEnviada ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
                     ) {
-                        Text(
-                            text = mensagemEnviada,
-                            color = Color.White,
-                            modifier = Modifier.padding(
-                                horizontal = 15.dp,
-                                vertical = 10.dp
+                        Surface(
+                            color = Color.Transparent,
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(1.dp, Color.White),
+                            modifier = Modifier.widthIn(max = 280.dp)
+                        ) {
+                            Text(
+                                text = mensagemEnviada.texto,
+                                color = Color.White,
+                                softWrap = true,
+                                modifier = Modifier
+                                    .widthIn(max = 280.dp)
+                                    .padding(12.dp),
+                                fontSize = 16.sp
                             )
-                        )
+                        }
                     }
                 }
             }
 
-            // campo de mensagem
+            // Campo de mensagem e botão de envio
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(
-                        horizontal = 5.dp,
-                        vertical = 30.dp
-                    ),
+                    .background(Color(0xFF1E1E1E))
+                    .padding(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 CampoMsg(
                     mensagem = mensagem,
-                    onMensagemChange = {
-                        mensagem = it
-                    },
-                    onEnviar = {
-                        if (mensagem.isNotBlank()) {
-                            mensagens = mensagens + mensagem
-                            mensagem = ""
-                        }
-                    },
+                    onMensagemChange = { mensagem = it },
+                    onEnviar = { enviarMensagem() },
                     modifier = Modifier.weight(1f)
                 )
 
-                Spacer(
-                    modifier = Modifier.width(5.dp)
-                )
+                Spacer(modifier = Modifier.width(8.dp))
 
-                // botao enviar
-                Button(
-                    onClick = {
-                        if (mensagem.isNotBlank()) {
-                            mensagens = mensagens + mensagem
-                            mensagem = ""
-                        }
-                    },
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(30.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Red
-                    ),
-                    shape = RoundedCornerShape(3.dp),
-                    contentPadding = PaddingValues(0.dp)
+                IconButton(
+                    onClick = { enviarMensagem() }
                 ) {
-
                     Icon(
                         imageVector = Icons.Default.Send,
-                        contentDescription = "Enviar",
-                        tint = Color.White,
-                        modifier = Modifier.padding(5.dp)
+                        contentDescription = "Enviar mensagem",
+                        tint = Color.Red
                     )
                 }
             }
@@ -216,23 +201,20 @@ fun CampoMsg(
     mensagem: String,
     onMensagemChange: (String) -> Unit,
     onEnviar: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = Color(0xFF2c2c2c),
+        modifier = modifier,
+        color = Color(0xFF2C2C2C),
         shape = RoundedCornerShape(5.dp),
         border = BorderStroke(1.dp, Color.White)
     ) {
-
         BasicTextField(
             value = mensagem,
             onValueChange = onMensagemChange,
-
             modifier = Modifier
                 .fillMaxWidth()
                 .onPreviewKeyEvent { evento ->
-
                     if (
                         evento.key == Key.Enter &&
                         evento.type == KeyEventType.KeyDown
@@ -247,9 +229,9 @@ fun CampoMsg(
                     horizontal = 12.dp,
                     vertical = 12.dp
                 ),
-
             textStyle = TextStyle(
-                color = Color.White
+                color = Color.White,
+                fontSize = 16.sp
             ),
             singleLine = true,
             decorationBox = { innerTextField ->
@@ -264,4 +246,3 @@ fun CampoMsg(
         )
     }
 }
-

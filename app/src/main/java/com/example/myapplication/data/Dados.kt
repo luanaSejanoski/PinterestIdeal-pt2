@@ -3,6 +3,7 @@ package com.example.myapplication.data
 
 import android.net.Uri
 import androidx.compose.runtime.mutableStateListOf
+import com.example.myapplication.Mensagem
 import com.example.myapplication.Pin
 import com.example.myapplication.R
 import com.example.myapplication.Usuario
@@ -10,6 +11,9 @@ import com.example.myapplication.Usuario
 object Dados {
     //var pastas = mutableListOf<Pasta>()
     //var usuarios = mutableListOf<Usuario>()
+
+    val mensagens = mutableStateListOf<Mensagem>()
+
     val usuarios = mutableStateListOf(
         Usuario(0, "Maria Silva", "maria001", "Amo fotografia 📷", "maria@email.com", null, mutableListOf(1)),
         Usuario(1, "João Souza", "joao002", "", "joao@email.com", null, mutableListOf(0)),
