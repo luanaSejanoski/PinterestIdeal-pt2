@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.material3.Scaffold
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.mutableStateListOf
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -168,7 +170,22 @@ fun salvarNomePasta(
 @Composable
 fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
 
-        val pasta = Dados.pastas.find{it.id == idPasta}?: return
+    val pasta = Dados.pastas.find{it.id == idPasta}?: return
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    BotaoVoltar(
+                        modifier = Modifier.padding(top = 25.dp, start = 6.dp),
+                        navController = navController)
+                }
+            )
+        }
+    ){
+        paddingValues ->
+
         var nomePasta by remember { mutableStateOf(pasta.nome) }
         var mostrarDialogoMudarNome by remember { mutableStateOf(false) }
         var mostrarDialogoExcluir by remember { mutableStateOf(false) }
@@ -207,24 +224,17 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
     }
 
     Surface(modifier = Modifier
-        .fillMaxSize(),
+        .fillMaxSize()
+        .padding(paddingValues),
         color = Color(0xFF1e1e1e),) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 20.dp),
+                .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column( modifier = Modifier.fillMaxWidth()) {
-                //topBar
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                   BotaoVoltar(navController = navController)
-                }
                 //informações da pasta
                 Row(
                     modifier = Modifier
@@ -398,5 +408,6 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                 }
             }
         }
+    }
     }
 }

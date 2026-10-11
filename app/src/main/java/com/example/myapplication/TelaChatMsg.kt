@@ -56,31 +56,14 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.LaunchedEffect
-
-
-
+import androidx.navigation.NavController
 
 
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 
-class TelaChatMsg : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    TelaMsg()
-                }
-            }
-        }
-    }
-}
-
-@Preview
 @Composable
-fun TelaMsg() {
+fun TelaMsg(navController: NavController) {
 
     var mensagem by remember {
         mutableStateOf("")
@@ -107,23 +90,14 @@ fun TelaMsg() {
             modifier = Modifier.fillMaxSize()
         ) {
 
-            // cabeçalho
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        horizontal = 10.dp,
-                        vertical = 20.dp
-                    ),
+                    .padding(horizontal = 5.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Voltar",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
+                BotaoVoltar(navController = navController,
+                    onClick = {navController.navigate(Rotas.HOME)})
 
                 Text(
                     text = "Mensagem",

@@ -23,17 +23,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun MenuInferior(navController: NavHostController) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val rotaAtual = navBackStackEntry?.destination?.route
 
     NavigationBar(
         containerColor = Color(0xFF757575)
     ) {
         NavigationBarItem(
-            selected = true,
+            selected = rotaAtual == Rotas.HOME,
             onClick = {
                 navController.navigate(Rotas.HOME)
             },
@@ -47,7 +51,7 @@ fun MenuInferior(navController: NavHostController) {
         )
 
         NavigationBarItem(
-            selected = false,
+            selected = rotaAtual == Rotas.PESQUISAR_PESSOAS,
             onClick = {
                 navController.navigate(Rotas.PESQUISAR_PESSOAS)
             },
@@ -61,7 +65,7 @@ fun MenuInferior(navController: NavHostController) {
         )
 
         NavigationBarItem(
-            selected = false,
+            selected = rotaAtual == Rotas.CRIAR_PASTA,
             onClick = {
                 navController.navigate(Rotas.CRIAR_PASTA)
             },
@@ -75,9 +79,9 @@ fun MenuInferior(navController: NavHostController) {
         )
 
         NavigationBarItem(
-            selected = false,
+            selected = rotaAtual == Rotas.MENSAGENS,
             onClick = {
-                navController.navigate(Rotas.HOME)
+                navController.navigate(Rotas.MENSAGENS)
             },
             icon = {
                 Icon(
