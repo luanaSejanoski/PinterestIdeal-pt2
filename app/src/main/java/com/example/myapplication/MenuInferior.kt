@@ -39,7 +39,7 @@ fun MenuInferior(navController: NavHostController) {
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Home,
+                    painter = painterResource(id = R.drawable.home),
                     contentDescription = "Tela inicial",
                     tint = Color.White
                 )
@@ -53,7 +53,7 @@ fun MenuInferior(navController: NavHostController) {
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Search,
+                    painter = painterResource(id = R.drawable.magnifier),
                     contentDescription = "Pesquisar pessoas",
                     tint = Color.White,
                 )
@@ -67,7 +67,7 @@ fun MenuInferior(navController: NavHostController) {
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Add,
+                    painter = painterResource(id = R.drawable.addpasta),
                     contentDescription = "Criar pasta",
                     tint = Color.White
                 )
@@ -81,8 +81,9 @@ fun MenuInferior(navController: NavHostController) {
             },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.icon_msg),
+                    painter = painterResource(id = R.drawable.comente),
                     contentDescription = "Mensagem",
+                    tint = Color.White
                 )
             }
         )

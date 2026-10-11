@@ -49,9 +49,6 @@ import androidx.navigation.NavController
 import com.example.myapplication.data.Dados
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
-
-
-
 @Composable
 fun TelaPesquisa(navController: NavController, idUsuario: Int = 0) {
 

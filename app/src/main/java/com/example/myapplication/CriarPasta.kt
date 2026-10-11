@@ -62,6 +62,8 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
     var nomeFocado by remember { mutableStateOf(false) }
     var descricaoFocada by remember { mutableStateOf(false) }
 
+    var habilitado by remember { mutableStateOf(false) }
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -176,11 +178,12 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
             BtnCriarPasta(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 onClick = {
-                    Dados.pastas.add(novaPasta)
-                    Dados.pastas.forEach { println(novaPasta) }
+                        Dados.pastas.add(novaPasta)
+                        Dados.pastas.forEach { println(novaPasta) }
                     navController.navigate(Rotas.HOME)
+                },
+                habilitado = nomePasta.isNotBlank()
 
-                }
             )
         }
     }
@@ -189,6 +192,7 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
 @Composable
 fun BtnCriarPasta(
     modifier: Modifier,
+    habilitado: Boolean,
     onClick: () -> Unit
 ) {
     Button(
@@ -196,8 +200,12 @@ fun BtnCriarPasta(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 30.dp),
+        enabled = habilitado,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red
+            containerColor = if(habilitado )Color.Red else Color.Gray,
+            contentColor = Color.White,
+            disabledContainerColor = Color.LightGray,
+            disabledContentColor = Color.White
         ),
         shape = RoundedCornerShape(5.dp)
     ) {
