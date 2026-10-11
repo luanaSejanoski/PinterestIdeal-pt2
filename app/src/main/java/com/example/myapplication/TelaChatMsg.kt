@@ -90,23 +90,14 @@ fun TelaMsg(navController: NavController) {
             modifier = Modifier.fillMaxSize()
         ) {
 
-            // cabeçalho
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        horizontal = 10.dp,
-                        vertical = 20.dp
-                    ),
+                    .padding(horizontal = 5.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Voltar",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
+                BotaoVoltar(navController = navController,
+                    onClick = {navController.navigate(Rotas.HOME)})
 
                 Text(
                     text = "Mensagem",
