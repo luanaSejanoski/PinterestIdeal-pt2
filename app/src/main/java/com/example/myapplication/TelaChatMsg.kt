@@ -49,16 +49,25 @@ import androidx.navigation.NavController
 import com.example.myapplication.data.Dados
 
 @Composable
-fun TelaMsg(navController: NavController) {
+fun TelaMsg(navController: NavController,
+            idAmigo: Int) {
 
     var mensagem by remember { mutableStateOf("") }
 
     // Lista compartilhada entre telas
     val mensagens = Dados.mensagens
 
-    // Usuários fixos para teste
+
     val remetente = Dados.usuarios.find { it.id == 0 }
-    val destinatario = Dados.usuarios.find { it.id == 1 }
+    val destinatario = Dados.usuarios.find { it.id == idAmigo }
+
+    val mensagensConversa = Dados.mensagens.filter { mensagem ->
+        (mensagem.remetente.id == 0 &&
+                mensagem.destinatario.id == idAmigo) ||
+
+                (mensagem.remetente.id == idAmigo &&
+                        mensagem.destinatario.id == 0)
+    }
 
     val listaState = rememberLazyListState()
 
@@ -87,7 +96,7 @@ fun TelaMsg(navController: NavController) {
     }
 
     // vai para a mensagem mais recente
-    LaunchedEffect(mensagens.size) {
+    LaunchedEffect(idAmigo, mensagensConversa.size) {
         if (mensagens.isNotEmpty()) {
             listaState.animateScrollToItem(0)
         }
@@ -111,8 +120,10 @@ fun TelaMsg(navController: NavController) {
                     navController = navController
                 )
 
+                val amigo = Dados.usuarios.find { it.id == idAmigo }
+
                 Text(
-                    text = "Mensagem",
+                    text = "${amigo?.nomeExibicao}",
                     color = Color.White,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
@@ -133,7 +144,7 @@ fun TelaMsg(navController: NavController) {
                 ),
                 contentPadding = PaddingValues(vertical = 12.dp)
             ) {
-                items(mensagens.reversed()) { mensagemEnviada ->
+                items(mensagensConversa.reversed()) { mensagemEnviada ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End

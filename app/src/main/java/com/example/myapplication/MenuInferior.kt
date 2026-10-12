@@ -85,7 +85,7 @@ fun MenuInferior(navController: NavHostController) {
             },
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.comente),
+                    painter = painterResource(id = R.drawable.chat),
                     contentDescription = "Mensagem",
                     tint = Color.White
                 )
