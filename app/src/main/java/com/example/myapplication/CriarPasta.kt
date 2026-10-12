@@ -62,8 +62,6 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
     var nomeFocado by remember { mutableStateOf(false) }
     var descricaoFocada by remember { mutableStateOf(false) }
 
-    var habilitado by remember { mutableStateOf(false) }
-
 
     Surface(
         modifier = Modifier.fillMaxSize(),

@@ -11,8 +11,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,109 +27,91 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.myapplication.data.Dados
+
+@OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
 fun TelaVerPastaUsuario(navController: NavController, idPasta: Int = 0){
 
     val pasta = Dados.pastas.find { it.id == idPasta } ?: return
 
-    var nomePasta by remember { mutableStateOf(pasta.nome) }
-    val context = LocalContext.current
-
-    val selecionarImagens = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetMultipleContents()
-    ) { uris ->
-        uris.forEach { uri ->
-            val drawable = context.contentResolver
-                .openInputStream(uri)
-                ?.use {
-                    Drawable.createFromStream(it, null)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1e1e1e)
+                ),
+                navigationIcon = {
+                    BotaoVoltar(
+                        modifier = Modifier.padding(top = 25.dp, start = 6.dp),
+                        navController = navController)
                 }
-            val largura = drawable?.intrinsicWidth ?: 0
-            val altura = drawable?.intrinsicHeight ?: 0
+            )
         }
-    }
+    ) { paddingValues ->
+        var nomePasta by remember { mutableStateOf(pasta.nome) }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF1e1e1e)
-    ) {
-        Column(
+        Surface(
             modifier = Modifier.fillMaxSize()
+                .padding(paddingValues),
+            color = Color(0xFF1e1e1e)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 10.dp),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                BotaoVoltar(
-                    navController = navController,
-                    onClick = { navController.popBackStack() }
-                )
-
-                Text(
-                    text = "Pasta",
-                    color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 10.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.Start
-            ) {
-                // Informações da pasta
-                Column {
-                    Row {
-                        Text(text = "$nomePasta", color = Color.White, fontSize = 20.sp)
-                    }
-                    Row {
-                        Text(text = "${pasta.pins.size} Pins", color = Color.White)
-                    }
-                }
-
-                val colunaEsquerda = mutableListOf<Pin>()
-                val colunaDireita = mutableListOf<Pin>()
-                val pinsDaPasta = Dados.pins.filter { pin -> pin.id in pasta.pins }
-                organizaImagensColuna(pinsDaPasta, colunaEsquerda, colunaDireita)
-
-                // Área das imagens
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(3.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        colunaEsquerda.forEach { item ->
-                            val proporcao = item.largura.toFloat() / item.altura.toFloat()
-                            gerarBlocoImagem(item.imagem, proporcao)
+                    // Informações da pasta
+                    Column {
+                        Row {
+                            Text(text = "$nomePasta", color = Color.White, fontSize = 20.sp)
+                        }
+                        Row {
+                            Text(text = "${pasta.pins.size} Pins", color = Color.White)
                         }
                     }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+
+                    val colunaEsquerda = mutableListOf<Pin>()
+                    val colunaDireita = mutableListOf<Pin>()
+                    val pinsDaPasta = Dados.pins.filter { pin -> pin.id in pasta.pins }
+                    organizaImagensColuna(pinsDaPasta, colunaEsquerda, colunaDireita)
+
+                    // Área das imagens
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(3.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        colunaDireita.forEach { item ->
-                            val proporcao = item.largura.toFloat() / item.altura.toFloat()
-                            gerarBlocoImagem(item.imagem, proporcao)
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            colunaEsquerda.forEach { item ->
+                                val proporcao = item.largura.toFloat() / item.altura.toFloat()
+                                gerarBlocoImagem(item.imagem, proporcao)
+                            }
+                        }
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            colunaDireita.forEach { item ->
+                                val proporcao = item.largura.toFloat() / item.altura.toFloat()
+                                gerarBlocoImagem(item.imagem, proporcao)
+                            }
                         }
                     }
                 }
-            }
         }
     }
 }

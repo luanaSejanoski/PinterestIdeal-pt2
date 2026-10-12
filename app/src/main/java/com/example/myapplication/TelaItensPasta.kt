@@ -44,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.mutableStateListOf
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -95,34 +97,6 @@ fun gerarBlocoImagem(
     }
 }
 
-//
-//@Composable
-//fun obterTamanhosImagens( listaImagens: MutableList<Pin>) {
-//    val context = LocalContext.current;
-//
-//    val uris = mutableListOf<Uri>()
-//
-//    listaImagens.forEach { imagem ->
-//        uris.add(imagem.imagem)
-//    }
-//
-//    //adiciona imagens na lista
-//    uris.forEach { uri ->
-//        //transforma o endereço da imagem(uri) e transforma em um drawable
-//        val drawable = context.contentResolver
-//            .openInputStream(uri)
-//            ?.use {
-//                Drawable.createFromStream(it, null)
-//            }
-//        val largura = drawable?.intrinsicWidth?: 0
-//        val altura = drawable?.intrinsicHeight?: 0
-//
-//        val pin = Pin(uri,largura,altura)
-//        listaImagens.add(pin)
-//    }
-//}
-
-
 fun organizaImagensColuna(
     listaPins: List<Pin>,
     colunaEsquerda: MutableList<Pin>,
@@ -133,7 +107,7 @@ fun organizaImagensColuna(
 
 
     listaPins.forEach { imagem ->
-        // Decidi em qual coluna colocar (menor)
+        // Decide em qual coluna colocar (menor)
         val alturaRelativa= imagem.altura.toFloat() / imagem.largura.toFloat() //quao alta a imagem é
 
         if(alturaEsquerda <= alturaDireita){
@@ -169,257 +143,253 @@ fun salvarNomePasta(
 @Composable
 fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
 
-    // CORRIGIDO: alterado de Dados.pasta para Dados.pastas
     val pasta = Dados.pastas.find{it.id == idPasta}?: return
 
-    var nomePasta by remember { mutableStateOf(pasta.nome) }
-    var mostrarDialogoMudarNome by remember { mutableStateOf(false) }
-    var mostrarDialogoExcluir by remember { mutableStateOf(false) }
-    var novoNome by remember { mutableStateOf("") }
-
-
-    val context = LocalContext.current
-
-
-    val selecionarImagens = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetMultipleContents()
-    ) { uris ->
-
-        uris.forEach { uri ->
-
-            val drawable = context.contentResolver
-                .openInputStream(uri)
-                ?.use {
-                    Drawable.createFromStream(it, null)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF1e1e1e)
+                ),
+                navigationIcon = {
+                    BotaoVoltar(
+                        modifier = Modifier.padding(top = 25.dp, start = 6.dp),
+                        navController = navController)
                 }
-
-            val largura = drawable?.intrinsicWidth ?: 0
-            val altura = drawable?.intrinsicHeight ?: 0
-
-
-            val novoPin = Pin(
-                id = proximoIdPin(),
-                imagem = uri,
-                largura = largura,
-                altura = altura
             )
-
-            Dados.pins.add(novoPin)
-            pasta.pins.add(novoPin.id)
         }
-    }
+    ) { paddingValues ->
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF1e1e1e)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                BotaoVoltar(
-                    navController = navController,
-                    onClick = { navController.popBackStack() }
+        var nomePasta by remember { mutableStateOf(pasta.nome) }
+        var mostrarDialogoMudarNome by remember { mutableStateOf(false) }
+        var mostrarDialogoExcluir by remember { mutableStateOf(false) }
+        var novoNome by remember { mutableStateOf("") }
+
+
+        val context = LocalContext.current
+
+
+        val selecionarImagens = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetMultipleContents()
+        ) { uris ->
+
+            uris.forEach { uri ->
+
+                val drawable = context.contentResolver
+                    .openInputStream(uri)
+                    ?.use {
+                        Drawable.createFromStream(it, null)
+                    }
+
+                val largura = drawable?.intrinsicWidth ?: 0
+                val altura = drawable?.intrinsicHeight ?: 0
+
+
+                val novoPin = Pin(
+                    id = proximoIdPin(),
+                    imagem = uri,
+                    largura = largura,
+                    altura = altura
                 )
 
-                androidx.compose.material3.Text(
-                    text = "Pasta",
-                    color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
+                Dados.pins.add(novoPin)
+                pasta.pins.add(novoPin.id)
             }
+        }
 
-            Surface(modifier = Modifier
-                .fillMaxSize(),
-                color = Color(0xFF1e1e1e),) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    verticalAlignment = Alignment.Top,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column( modifier = Modifier.fillMaxWidth()) {
-                        //informações da pasta
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 10.dp, vertical = 20.dp),
-                            verticalAlignment = Alignment.Top,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row() {
-                                Column() {
-                                    Row() {
-                                        Text(text = "$nomePasta", color = Color.White, fontSize = 20.sp)
-                                        gerarBlocoIcone(
-                                            Color(0xFF1e1e1e),
-                                            30,
-                                            5,
-                                            icon = painterResource(R.drawable.editar),
-                                            onClick = {
-                                                novoNome = nomePasta
-                                                mostrarDialogoMudarNome = true
-                                            }
-                                        )
+        Surface(
+            modifier = Modifier.fillMaxSize()
+                .padding(paddingValues),
+            color = Color(0xFF1e1e1e)
+        ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            //informações da pasta
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp, vertical = 20.dp),
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row() {
+                                    Column() {
+                                        Row() {
+                                            Text(
+                                                text = "$nomePasta",
+                                                color = Color.White,
+                                                fontSize = 20.sp
+                                            )
+                                            gerarBlocoIcone(
+                                                Color(0xFF1e1e1e),
+                                                30,
+                                                5,
+                                                icon = painterResource(R.drawable.editar),
+                                                onClick = {
+                                                    novoNome = nomePasta
+                                                    mostrarDialogoMudarNome = true
+                                                }
+                                            )
+                                        }
+                                        if (mostrarDialogoMudarNome) {
+                                            AlertDialog(
+                                                onDismissRequest = {
+                                                    mostrarDialogoMudarNome = false
+                                                },
+
+                                                title = {
+                                                    Text("Renomear pasta")
+                                                },
+
+                                                text = {
+                                                    TextField(
+                                                        value = novoNome,
+                                                        onValueChange = {
+                                                            novoNome = it
+                                                        },
+                                                        singleLine = true
+                                                    )
+                                                },
+
+                                                confirmButton = {
+                                                    TextButton(
+                                                        onClick = {
+                                                            nomePasta = novoNome
+                                                            mostrarDialogoMudarNome = false
+                                                            salvarNomePasta(pasta, nomePasta)
+                                                        }
+                                                    ) {
+                                                        Text("Salvar")
+                                                    }
+                                                },
+
+                                                dismissButton = {
+                                                    TextButton(
+                                                        onClick = {
+                                                            mostrarDialogoMudarNome = false
+                                                        }
+                                                    ) {
+                                                        Text("Cancelar")
+                                                    }
+                                                }
+                                            )
+                                        }
+                                        Row() {
+                                            Text(
+                                                text = "${pasta.pins.size} Pins",
+                                                color = Color.White
+                                            )
+                                        }
                                     }
-                                    if (mostrarDialogoMudarNome) {
+                                }
+
+                                Row() {
+                                    gerarBlocoIcone(
+                                        Color(0xFF1e1e1e),
+                                        30,
+                                        5,
+                                        icon = painterResource(R.drawable.carregar_imagem),
+                                        onClick = { selecionarImagens.launch("image/*") }
+                                    )
+                                    gerarBlocoIcone(
+                                        Color(0xFF1e1e1e),
+                                        30,
+                                        5,
+                                        icon = painterResource(R.drawable.excluir),
+                                        onClick = {
+                                            mostrarDialogoExcluir = true
+                                        }
+                                    )
+
+
+                                    if (mostrarDialogoExcluir) {
                                         AlertDialog(
-                                            onDismissRequest = {
-                                                mostrarDialogoMudarNome = false
-                                            },
-
-                                            title = {
-                                                Text("Renomear pasta")
-                                            },
-
-                                            text = {
-                                                TextField(
-                                                    value = novoNome,
-                                                    onValueChange = {
-                                                        novoNome = it
-                                                    },
-                                                    singleLine = true
-                                                )
-                                            },
-
+                                            onDismissRequest = { mostrarDialogoExcluir = false },
+                                            title = { Text("Excluir pasta") },
+                                            text = { Text("Tem certeza de que deseja excluir essa pasta?") },
                                             confirmButton = {
                                                 TextButton(
                                                     onClick = {
-                                                        nomePasta = novoNome
-                                                        mostrarDialogoMudarNome = false
-                                                        salvarNomePasta(pasta, nomePasta)
+                                                        mostrarDialogoExcluir = false
+                                                        Dados.pastas.remove(pasta)
+
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Pasta removida!",
+                                                            Toast.LENGTH_LONG
+                                                        ).show()
+
+                                                        navController.popBackStack()
                                                     }
                                                 ) {
-                                                    Text("Salvar")
+                                                    Text("Confirmar")
                                                 }
                                             },
-
                                             dismissButton = {
                                                 TextButton(
-                                                    onClick = {
-                                                        mostrarDialogoMudarNome = false
-                                                    }
+                                                    onClick = { mostrarDialogoExcluir = false }
                                                 ) {
                                                     Text("Cancelar")
                                                 }
                                             }
                                         )
                                     }
-                                    Row() {
-                                        Text(text = "${pasta.pins.size} Pins", color = Color.White)
+                                }
+                            }
+
+
+                            //cria lista das imagens
+
+                            val colunaEsquerda = mutableListOf<Pin>()
+                            val colunaDireita = mutableListOf<Pin>()
+                            val pinsDaPasta = Dados.pins.filter { pin -> pin.id in pasta.pins }
+                            organizaImagensColuna(pinsDaPasta, colunaEsquerda, colunaDireita)
+
+
+                            //área das imagens
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(3.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            )
+                            {
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    colunaEsquerda.forEach { item ->
+                                        println("URI DA IMAGEM: ${item.imagem}")
+                                        println("LARGURA: ${item.largura}")
+                                        println("ALTURA: ${item.altura}")
+                                        // Define a proporção da imagem para que ela mantenha suas medidas originais na tela
+                                        val proporcao =
+                                            item.largura.toFloat() / item.altura.toFloat()
+                                        gerarBlocoImagem(item.imagem, proporcao)
+
                                     }
                                 }
-                            }
-
-                            Row() {
-                                gerarBlocoIcone(
-                                    Color(0xFF1e1e1e),
-                                    30,
-                                    5,
-                                    icon = painterResource(R.drawable.carregar_imagem),
-                                    onClick = {selecionarImagens.launch("image/*")}
-                                )
-                                gerarBlocoIcone(
-                                    Color(0xFF1e1e1e),
-                                    30,
-                                    5,
-                                    icon = painterResource(R.drawable.excluir),
-                                    onClick = {
-                                        mostrarDialogoExcluir = true
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    colunaDireita.forEach { item ->
+                                        val proporcao =
+                                            item.largura.toFloat() / item.altura.toFloat()
+                                        gerarBlocoImagem(item.imagem, proporcao)
                                     }
-                                )
-
-
-                                if (mostrarDialogoExcluir) {
-                                    AlertDialog(
-                                        onDismissRequest = { mostrarDialogoExcluir = false },
-                                        title = { Text("Excluir pasta") },
-                                        text = { Text("Tem certeza de que deseja excluir essa pasta?") },
-                                        confirmButton = {
-                                            TextButton(
-                                                onClick = {
-                                                    mostrarDialogoExcluir = false
-                                                    Dados.pastas.remove(pasta)
-
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Pasta removida!",
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-
-                                                    navController.popBackStack()
-                                                }
-                                            ) {
-                                                Text("Confirmar")
-                                            }
-                                        },
-                                        dismissButton = {
-                                            TextButton(
-                                                onClick = { mostrarDialogoExcluir = false }
-                                            ) {
-                                                Text("Cancelar")
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-
-
-                        //cria lista das imagens
-
-//                obterTamanhosImagens(listaImagens)
-
-
-                        val colunaEsquerda = mutableListOf<Pin>()
-                        val colunaDireita = mutableListOf<Pin>()
-                        val pinsDaPasta = Dados.pins.filter{ pin-> pin.id in pasta.pins }
-                        organizaImagensColuna(pinsDaPasta, colunaEsquerda, colunaDireita)
-
-
-                        //área das imagens
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(3.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        )
-                        {
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                colunaEsquerda.forEach { item ->
-                                    println("URI DA IMAGEM: ${item.imagem}")
-                                    println("LARGURA: ${item.largura}")
-                                    println("ALTURA: ${item.altura}")
-                                    // Define a proporção da imagem para que ela mantenha suas medidas originais na tela
-                                    val proporcao = item.largura.toFloat() / item.altura.toFloat()
-                                    gerarBlocoImagem(item.imagem, proporcao)
-
-                                }
-                            }
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                colunaDireita.forEach { item ->
-                                    val proporcao = item.largura.toFloat() / item.altura.toFloat()
-                                    gerarBlocoImagem(item.imagem, proporcao)
                                 }
                             }
                         }
                     }
-                }
-            }
         }
     }
 }

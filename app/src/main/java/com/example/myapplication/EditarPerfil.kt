@@ -128,15 +128,12 @@ fun CampoEditar(nomeCampo: String,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
-            disabledContainerColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             focusedLabelColor = Color.White,
             unfocusedLabelColor = Color.White,
             focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
-            focusedPlaceholderColor = Color.Gray,
-            unfocusedPlaceholderColor = Color.Gray
+            unfocusedTextColor = Color.White
         )
     )
 }

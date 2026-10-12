@@ -1,10 +1,8 @@
 package com.example.myapplication
 
-import android.os.Bundle
+
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.camera.core.Preview
+import androidx.compose.material3.TextField
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,13 +30,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -124,7 +117,7 @@ fun TelaVerAmigos(navController: NavController, idUsuario: Int = 0){
                         ).show()
                     },
                     onMensagemClick = { amigo ->
-                        navController.navigate(Rotas.MENSAGENS)
+                        navController.navigate(Rotas.CHAT)
                     },
                     navController = navController
                 )
@@ -192,8 +185,8 @@ fun BarraPesquisaAmigos(
                             color = Color.Gray
                         )
                     },
-                    colors = TextFieldDefaults.colors(
-                        Color.Transparent
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Transparent
                     )
                 )
             }
@@ -235,7 +228,7 @@ fun ItemAmigo(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2c2c2c)
         ),
-        shape = RoundedCornerShape(12.dp) // Ou o formato de canto que preferir
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
@@ -288,7 +281,8 @@ fun ItemAmigo(
                     Icon(
                         painter = painterResource(id = R.drawable.comente),
                         contentDescription = "Mensagem",
-                        tint = Color.White
+                        tint = Color.White,
+
                     )
                 }
 

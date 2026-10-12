@@ -44,6 +44,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.example.myapplication.data.Dados
 
@@ -100,28 +101,21 @@ fun TelaMsg(navController: NavController) {
             modifier = Modifier.fillMaxSize()
         ) {
 
-            // Cabeçalho
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFF2C2C2C))
-                    .padding(12.dp),
+                    .padding(horizontal = 5.dp, vertical = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = { navController.popBackStack() }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Voltar",
-                        tint = Color.White
-                    )
-                }
+                BotaoVoltar(
+                    navController = navController
+                )
 
                 Text(
                     text = "Mensagem",
                     color = Color.White,
-                    fontSize = 20.sp
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
                 )
             }
 
