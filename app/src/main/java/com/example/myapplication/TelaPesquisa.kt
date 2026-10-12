@@ -1,3 +1,4 @@
+
 package com.example.myapplication
 
 
@@ -18,12 +19,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -42,10 +47,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.key
+import androidx.compose.ui.draw.rotate
 import androidx.navigation.NavController
 import com.example.myapplication.data.Dados
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -59,54 +64,31 @@ fun TelaPesquisa(navController: NavController, idUsuario: Int = 0) {
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
     ) {
-        Column(
+
+        Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Row(
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                BotaoVoltar(
-                    navController = navController,
-                    onClick = { navController.popBackStack() }
-                )
-
-                Text(
-                    text = "Pesquisar",
-                    color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
-                )
-            }
-
-            Box(
-                modifier = Modifier.fillMaxSize()
+                    .fillMaxSize()
+                    .padding(bottom = 50.dp)
             ) {
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 50.dp)
-                ) {
+                Spacer(modifier = Modifier.height(40.dp))
 
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    BarraPesquisa(
-                        usuarios = Dados.usuarios.filter { it.id != 0 },
-                        usuarioLogado = usuario,
-                        onAdicionarAmigo = { amigo ->
-                            if (
-                                amigo.id != usuario.id &&
-                                amigo.id !in usuario.amigos
-                            ) {
-                                usuario.amigos.add(amigo.id)
-                            }
-                        },
-                        navController = navController
-                    )
-                }
+                BarraPesquisa(
+                    usuarios = Dados.usuarios,
+                    usuarioLogado = usuario,
+                    onAdicionarAmigo = { amigo ->
+                        if (
+                            amigo.id != usuario.id &&
+                            amigo.id !in usuario.amigos
+                        ) {
+                            usuario.amigos.add(amigo.id)
+                        }
+                    }
+                )
             }
         }
     }
@@ -142,7 +124,6 @@ fun BarraPesquisa(
     usuarios: List<Usuario>,
     onAdicionarAmigo: (Usuario) -> Unit,
     usuarioLogado: Usuario,
-    navController: NavController
 ) {
     var pesquisarP by remember { mutableStateOf("") }
 
@@ -199,28 +180,44 @@ fun BarraPesquisa(
             }
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
+
         // Usuários encontrados
-        usuariosFiltrados.forEach { usuario ->
-            key(usuario.id) {
-                Usuarios(
-                    usuario = usuario,
-                    usuarioLogado = usuarioLogado,
-                    imagem = R.drawable.user,
-                    onAdicionarAmigo = onAdicionarAmigo,
-                    navController = navController
-                )
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
+            items(
+                items = usuariosFiltrados,
+                key = { usuario -> usuario.id }
+            ) { usuario ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 5.dp)
+                        .clickable{
+//                            VerPerfilUsuario(usuario.id)
+                        },
+
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFF2c2c2c)
+                    )
+                ) {
+                    Usuarios(
+                        usuario = usuario,
+                        usuarioLogado = usuarioLogado,
+                        imagem = R.drawable.user,
+                        onAdicionarAmigo = onAdicionarAmigo
+                    )
+                }
             }
         }
     }
 }
-
 @Composable
 fun Usuarios(usuario: Usuario,
              usuarioLogado: Usuario,
              imagem: Int? = null,
-             onAdicionarAmigo: (Usuario) -> Unit,
-             navController: NavController
-) {
+             onAdicionarAmigo: (Usuario) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -234,13 +231,7 @@ fun Usuarios(usuario: Usuario,
         }
 
         Row(
-            modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    navController.navigate(
-                        Rotas.VER_PERFIL_USUARIO.replace("{idUsuario}", usuario.id.toString())
-                    )
-                },
+            modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Avatar (circulo)
@@ -286,3 +277,7 @@ fun Usuarios(usuario: Usuario,
         }
     }
 }
+
+
+
+
