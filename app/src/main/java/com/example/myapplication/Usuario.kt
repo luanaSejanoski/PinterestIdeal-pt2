@@ -10,7 +10,8 @@ data class Usuario(
     val biografia: String,
     val email: String,
     val foto: Uri?,
-    val amigos: MutableList<Int> = mutableStateListOf()
+    val amigos: MutableList<Int> = mutableStateListOf(),
+    val pastas: MutableList<Int> = mutableStateListOf()
 )
 
 

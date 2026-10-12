@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +28,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.draw.clip
@@ -38,8 +38,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import androidx.navigation.NavHostController
-
-
 
 @Composable
 fun gerarBotao(x: Float,
@@ -82,18 +80,17 @@ fun gararPasta(nomePasta: String, numeroPins: Int, onclick: () -> Unit){
             )
         }
 
-            Text(text = "$nomePasta",
-                color = Color.White,
-                fontSize = 14.sp
-            )
-            Text(text = "$numeroPins Pins",
-                color = Color.White,
-                fontSize = 12.sp
-            )
+        Text(text = "$nomePasta",
+            color = Color.White,
+            fontSize = 14.sp
+        )
+        Text(text = "$numeroPins Pins",
+            color = Color.White,
+            fontSize = 12.sp
+        )
 
     }
 }
-
 
 @Composable
 fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
@@ -107,7 +104,6 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            //usuario
             Row(modifier = Modifier.padding(top = 60.dp)
             ) {
                 Row(
@@ -135,7 +131,6 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                     }
                 }
             }
-            //amigos e bio
             Row(
             ) {
                 Box(
@@ -152,7 +147,12 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                             text = "${usuario.amigos?.size} amigos",
                             color = Color.White,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable{
+                                navController.navigate(
+                                    Rotas.VER_AMIGOS.replace("{idUsuario}", usuario.id.toString())
+                                )
+                            }
                         )
                         Text(
                             text = "${usuario.biografia}".take(50),
@@ -163,8 +163,8 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                     }
 
                 }
+
             }
-            //editar perfil
             Row(
                 modifier = Modifier
                     .padding(vertical = 10.dp).size(height = 40.dp, width = 130.dp),
@@ -180,13 +180,11 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                         });
                 }
             }
-            //área de pastas
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                //pastas
                 Column(
                     modifier = Modifier
                         .size(height = 40.dp, width = 90.dp)
@@ -206,7 +204,6 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                     ) {}
                 }
             }
-            //pastas criadas
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -216,28 +213,26 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2)
                 ) {
-                    
-                    Dados.pastas.forEach {
-                        pasta ->
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                        colors = CardDefaults.cardColors(
-                                        containerColor = Color.Transparent)
-                            ) {
+                    val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
+
+                    items(pastasDoUsuario) { pasta ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Transparent
+                            )
+                        ) {
                             Box(
                                 modifier = Modifier.fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {
                                 gararPasta(pasta.nome, pasta.pins.size,
                                     onclick = {
-
                                         navController.navigate(
-                                          Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
+                                            Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
                                         )
                                     })
                             }
-                                }
                         }
                     }
                 }

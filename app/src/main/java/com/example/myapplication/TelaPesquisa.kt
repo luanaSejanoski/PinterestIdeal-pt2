@@ -1,4 +1,3 @@
-
 package com.example.myapplication
 
 
@@ -6,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.key
@@ -58,31 +59,54 @@ fun TelaPesquisa(navController: NavController, idUsuario: Int = 0) {
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
     ) {
-
-        Box(
+        Column(
             modifier = Modifier.fillMaxSize()
         ) {
-
-            Column(
+            Row(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 50.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp, vertical = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BotaoVoltar(
+                    navController = navController,
+                    onClick = { navController.popBackStack() }
+                )
+
+                Text(
+                    text = "Pesquisar",
+                    color = Color.White,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 50.dp)
+                ) {
 
-                BarraPesquisa(
-                    usuarios = Dados.usuarios,
-                    usuarioLogado = usuario,
-                    onAdicionarAmigo = { amigo ->
-                        if (
-                            amigo.id != usuario.id &&
-                            amigo.id !in usuario.amigos
-                        ) {
-                            usuario.amigos.add(amigo.id)
-                        }
-                    }
-                )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    BarraPesquisa(
+                        usuarios = Dados.usuarios.filter { it.id != 0 },
+                        usuarioLogado = usuario,
+                        onAdicionarAmigo = { amigo ->
+                            if (
+                                amigo.id != usuario.id &&
+                                amigo.id !in usuario.amigos
+                            ) {
+                                usuario.amigos.add(amigo.id)
+                            }
+                        },
+                        navController = navController
+                    )
+                }
             }
         }
     }
@@ -118,6 +142,7 @@ fun BarraPesquisa(
     usuarios: List<Usuario>,
     onAdicionarAmigo: (Usuario) -> Unit,
     usuarioLogado: Usuario,
+    navController: NavController
 ) {
     var pesquisarP by remember { mutableStateOf("") }
 
@@ -181,7 +206,8 @@ fun BarraPesquisa(
                     usuario = usuario,
                     usuarioLogado = usuarioLogado,
                     imagem = R.drawable.user,
-                    onAdicionarAmigo = onAdicionarAmigo
+                    onAdicionarAmigo = onAdicionarAmigo,
+                    navController = navController
                 )
             }
         }
@@ -192,7 +218,9 @@ fun BarraPesquisa(
 fun Usuarios(usuario: Usuario,
              usuarioLogado: Usuario,
              imagem: Int? = null,
-             onAdicionarAmigo: (Usuario) -> Unit) {
+             onAdicionarAmigo: (Usuario) -> Unit,
+             navController: NavController
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -206,7 +234,13 @@ fun Usuarios(usuario: Usuario,
         }
 
         Row(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .clickable {
+                    navController.navigate(
+                        Rotas.VER_PERFIL_USUARIO.replace("{idUsuario}", usuario.id.toString())
+                    )
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Avatar (circulo)
@@ -252,7 +286,3 @@ fun Usuarios(usuario: Usuario,
         }
     }
 }
-
-
-
-

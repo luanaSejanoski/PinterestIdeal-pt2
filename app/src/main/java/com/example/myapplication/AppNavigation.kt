@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 object Rotas{
      const val HOME = "home"
@@ -16,6 +18,9 @@ object Rotas{
      const val PESQUISAR_PESSOAS = "pesquisarPerfil/0"
      const val CRIAR_PASTA = "criarPasta/0"
      const val MENSAGENS = "mensagens/0"
+     const val VER_PERFIL_USUARIO = "verPerfilUsuario/{idUsuario}"
+     const val VER_PASTA_USUARIO = "verPastaUsuario/0"
+     const val VER_AMIGOS = "verAmigos/{idUsuario}"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +59,24 @@ fun AppNavigation(navController: NavHostController) {
                composable(Rotas.MENSAGENS){
                     TelaMsg(navController)
                }
+               composable(Rotas.VER_AMIGOS,
+                    arguments = listOf(navArgument("idUsuario") { type = NavType.IntType })
+               ){ entrada ->
+                    val idUsuario = entrada.arguments?.getInt("idUsuario") ?: 0
+                    TelaVerAmigos(navController, idUsuario = idUsuario)
+               }
+
+               composable(Rotas.VER_PERFIL_USUARIO,
+                    arguments = listOf(navArgument("idUsuario") { type = NavType.IntType })
+               ){ entrada ->
+                    val idUsuario = entrada.arguments?.getInt("idUsuario") ?: 0
+                    TelaVerPerfilUsuario(navController, idUsuario = idUsuario)
+               }
+               composable(Rotas.VER_PASTA_USUARIO){  entrada ->
+                    val idPasta = entrada.arguments?.getString("idPasta")?.toIntOrNull() ?: 0
+                    TelaVerPastaUsuario(navController, idPasta = idPasta)
+               }
+
           }
      }
 }

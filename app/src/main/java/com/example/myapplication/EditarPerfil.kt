@@ -140,16 +140,16 @@ fun salvarAlteracoes(
     nomeUsuario: String, biografia: String,
     email: String, fotoPerfil: Uri?
 ){
-   val usuarioAtualizado = usuario.copy(
-       nomeExibicao = nomeExibicao,
-       nomeUsuario = nomeUsuario,
-       biografia = biografia,
-       email = email,
-       foto = fotoPerfil
-   )
+    val usuarioAtualizado = usuario.copy(
+        nomeExibicao = nomeExibicao,
+        nomeUsuario = nomeUsuario,
+        biografia = biografia,
+        email = email,
+        foto = fotoPerfil
+    )
 
     val indice = Dados.usuarios.indexOfFirst {
-       it.id == usuario.id
+        it.id == usuario.id
     }
 
     if(indice != -1){
@@ -185,11 +185,11 @@ fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return
 
 
-        var nomeExibicao by remember { mutableStateOf(usuario.nomeExibicao) }
-        var nomeUsuario by remember { mutableStateOf(usuario.nomeUsuario) }
-        var biografia by remember { mutableStateOf(usuario.biografia) }
-        var email by remember { mutableStateOf(usuario.email) }
-        var fotoPerfil by remember { mutableStateOf(usuario.foto) }
+    var nomeExibicao by remember { mutableStateOf(usuario.nomeExibicao) }
+    var nomeUsuario by remember { mutableStateOf(usuario.nomeUsuario) }
+    var biografia by remember { mutableStateOf(usuario.biografia) }
+    var email by remember { mutableStateOf(usuario.email) }
+    var fotoPerfil by remember { mutableStateOf(usuario.foto) }
 
 
     //seleciona foto da galeria
@@ -206,27 +206,46 @@ fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
         .fillMaxSize()
         .verticalScroll(rememberScrollState()),
         color = Color(0xFF1e1e1e),) {
-        Row( modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 20.dp),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceBetween
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    BotaoVoltar(navController=navController)
-                    Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp, vertical = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BotaoVoltar(
+                    navController = navController,
+                    onClick = { navController.popBackStack() }
+                )
 
-                    val habilitado =
-                        nomeExibicao != usuario.nomeExibicao ||
-                                nomeUsuario != usuario.nomeUsuario ||
-                                biografia != usuario.biografia ||
-                                email != usuario.email ||
-                                fotoPerfil != usuario.foto
+                Text(
+                    text = "Editar perfil",
+                    color = Color.White,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Row( modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 20.dp),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val habilitado =
+                            nomeExibicao != usuario.nomeExibicao ||
+                                    nomeUsuario != usuario.nomeUsuario ||
+                                    biografia != usuario.biografia ||
+                                    email != usuario.email ||
+                                    fotoPerfil != usuario.foto
 
                         geraBotao(0.25f, "Feito",
                             habilitado,
@@ -240,201 +259,69 @@ fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
                                 navController.navigate(Rotas.HOME)
                             }
                         )
-                }
-
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 30.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        gerarConteudoBloco(
-                            x = 150,
-                            y = 5,
-                            cor = Color.Red,
-                            raio = 75,
-                            imagem = fotoPerfil?: R.drawable.foto_perfil_editar
-                        )
-                        geraBotao(0.2f, "Editar", habilitado = true,
-                            onclick = {selecionarImagem.launch("image/*")}
-                        )
                     }
-                }
 
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(30.dp)
+                            .padding(vertical = 30.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        CampoEditar("Nome",
-                            nomeExibicao,
-                            singleline = true,
-                            onValueChange = { novoValor ->
-                            nomeExibicao = novoValor
-                        })
-                        CampoEditar(
-                            "Nome de usuário",
-                            nomeUsuario,
-                            singleline = true,
-                            onValueChange = {novoValor -> nomeUsuario = novoValor})
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            gerarConteudoBloco(
+                                x = 150,
+                                y = 5,
+                                cor = Color.Red,
+                                raio = 75,
+                                imagem = fotoPerfil?: R.drawable.foto_perfil_editar
+                            )
+                            geraBotao(0.2f, "Editar", habilitado = true,
+                                onclick = {selecionarImagem.launch("image/*")}
+                            )
+                        }
+                    }
 
-                        CampoEditar(
-                            "Biografia",
-                            biografia,
-                            singleline = false,
-                            onValueChange = {novoValor -> biografia = novoValor})
 
-                        CampoEditar(
-                            "Email",
-                            email,
-                            singleline = true,
-                            onValueChange = {novoValor -> email = novoValor})
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(30.dp)
+                        ) {
+                            CampoEditar("Nome",
+                                nomeExibicao,
+                                singleline = true,
+                                onValueChange = { novoValor ->
+                                    nomeExibicao = novoValor
+                                })
+                            CampoEditar(
+                                "Nome de usuário",
+                                nomeUsuario,
+                                singleline = true,
+                                onValueChange = {novoValor -> nomeUsuario = novoValor})
+
+                            CampoEditar(
+                                "Biografia",
+                                biografia,
+                                singleline = false,
+                                onValueChange = {novoValor -> biografia = novoValor})
+
+                            CampoEditar(
+                                "Email",
+                                email,
+                                singleline = true,
+                                onValueChange = {novoValor -> email = novoValor})
+                        }
                     }
                 }
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

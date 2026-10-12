@@ -69,10 +69,9 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF1e1e1e)
     ) {
-        Box(
+        Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Cabeçalho
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,67 +89,71 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
                 )
             }
 
-            Spacer(modifier = Modifier.padding(100.dp))
-
-            Column(
+            Box(
                 modifier = Modifier.fillMaxSize()
-                .offset(y = 130.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Image(
-                painter = painterResource(id = R.drawable.pasta),
-                contentDescription = "Pasta",
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(120.dp)
-            )
+                Spacer(modifier = Modifier.padding(100.dp))
 
-                Spacer(modifier = Modifier.height(70.dp))
-
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(65.dp)
-                        .padding(horizontal = 20.dp),
-                    color = Color.Transparent,
-                    shape = RoundedCornerShape(5.dp),
-                    border = BorderStroke(1.dp,
-                        if(nomeFocado) Color.Red else Color.White)
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .offset(y = 130.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TextField(
-                        value = nomePasta,
-                        onValueChange = { nomePasta = it },
-                        modifier = Modifier.onFocusChanged {
-                            nomeFocado = it.isFocused
-                        },
-                        textStyle = LocalTextStyle.current.copy(
-                            color = Color.White
-                        ),
-                        placeholder = {
-                            Text(
-                                text = "Nome da pasta",
-                                color = Color.White
-                            )
-                        },
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = Color.Transparent
-                        )
+
+                    Image(
+                        painter = painterResource(id = R.drawable.pasta),
+                        contentDescription = "Pasta",
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(120.dp)
                     )
-                }
 
-                Spacer(modifier = Modifier.height(30.dp))
+                    Spacer(modifier = Modifier.height(70.dp))
 
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(90.dp)
-                        .padding(horizontal = 20.dp),
-                    color = Color.Transparent,
-                    shape = RoundedCornerShape(5.dp),
-                    border = BorderStroke(1.dp,
-                        if(descricaoFocada) Color.Red else Color.White)
-                ) {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(65.dp)
+                            .padding(horizontal = 20.dp),
+                        color = Color.Transparent,
+                        shape = RoundedCornerShape(5.dp),
+                        border = BorderStroke(1.dp,
+                            if(nomeFocado) Color.Red else Color.White)
+                    ) {
+                        TextField(
+                            value = nomePasta,
+                            onValueChange = { nomePasta = it },
+                            modifier = Modifier.onFocusChanged {
+                                nomeFocado = it.isFocused
+                            },
+                            textStyle = LocalTextStyle.current.copy(
+                                color = Color.White
+                            ),
+                            placeholder = {
+                                Text(
+                                    text = "Nome da pasta",
+                                    color = Color.White
+                                )
+                            },
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = Color.Transparent
+                            )
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(90.dp)
+                            .padding(horizontal = 20.dp),
+                        color = Color.Transparent,
+                        shape = RoundedCornerShape(5.dp),
+                        border = BorderStroke(1.dp,
+                            if(descricaoFocada) Color.Red else Color.White)
+                    ) {
                         TextField(
                             value = descricao,
                             onValueChange = { descricao = it },
@@ -170,21 +173,23 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
                                 containerColor = Color.Transparent
                             )
                         )
+                    }
                 }
-            }
 
-            val novaPasta = Pasta(proximoIdPasta(), nomePasta, descricao)
+                val novoId = proximoIdPasta()
+                val novaPasta = Pasta(novoId, nomePasta, descricao)
 
-            BtnCriarPasta(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                onClick = {
+                BtnCriarPasta(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    onClick = {
                         Dados.pastas.add(novaPasta)
-                        Dados.pastas.forEach { println(novaPasta) }
-                    navController.navigate(Rotas.HOME)
-                },
-                habilitado = nomePasta.isNotBlank()
+                        usuario.pastas.add(novoId)
+                        navController.navigate(Rotas.HOME)
+                    },
+                    habilitado = nomePasta.isNotBlank()
 
-            )
+                )
+            }
         }
     }
 }
