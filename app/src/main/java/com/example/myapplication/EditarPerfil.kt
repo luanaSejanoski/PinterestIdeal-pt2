@@ -204,124 +204,103 @@ fun TelaEditarPerfil(navController: NavController, idUsuario: Int = 0) {
         }
     }
 
-
     Surface(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState()),
         color = Color(0xFF1e1e1e),) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Row( modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 20.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                BotaoVoltar(
-                    navController = navController,
-                    onClick = { navController.popBackStack() }
-                )
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    BotaoVoltar(navController=navController)
+                    Text(text = "Editar perfil", color = Color.White, textAlign = TextAlign.Center)
 
-                Text(
-                    text = "Editar perfil",
-                    color = Color.White,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
-                )
-            }
+                    val habilitado =
+                        nomeExibicao != usuario.nomeExibicao ||
+                                nomeUsuario != usuario.nomeUsuario ||
+                                biografia != usuario.biografia ||
+                                email != usuario.email ||
+                                fotoPerfil != usuario.foto
 
-            Row( modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 20.dp),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        val habilitado =
-                            nomeExibicao != usuario.nomeExibicao ||
-                                    nomeUsuario != usuario.nomeUsuario ||
-                                    biografia != usuario.biografia ||
-                                    email != usuario.email ||
-                                    fotoPerfil != usuario.foto
+                    geraBotao(0.25f, "Feito",
+                        habilitado,
+                        corHabilitado = Color.Red,
+                        onclick = {
+                            salvarAlteracoes(
+                                usuario, nomeExibicao, nomeUsuario,
+                                biografia, email, fotoPerfil
+                            )
 
-                        geraBotao(0.25f, "Feito",
-                            habilitado,
-                            corHabilitado = Color.Red,
-                            onclick = {
-                                salvarAlteracoes(
-                                    usuario, nomeExibicao, nomeUsuario,
-                                    biografia, email, fotoPerfil
-                                )
+                            navController.navigate(Rotas.HOME)
+                        }
+                    )
+                }
 
-                                navController.navigate(Rotas.HOME)
-                            }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 30.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        gerarConteudoBloco(
+                            x = 150,
+                            y = 5,
+                            cor = Color.Red,
+                            raio = 75,
+                            imagem = fotoPerfil?: R.drawable.foto_perfil_editar
+                        )
+                        geraBotao(0.2f, "Editar", habilitado = true,
+                            onclick = {selecionarImagem.launch("image/*")}
                         )
                     }
+                }
 
 
-                    Row(
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 30.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(30.dp)
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            gerarConteudoBloco(
-                                x = 150,
-                                y = 5,
-                                cor = Color.Red,
-                                raio = 75,
-                                imagem = fotoPerfil?: R.drawable.foto_perfil_editar
-                            )
-                            geraBotao(0.2f, "Editar", habilitado = true,
-                                onclick = {selecionarImagem.launch("image/*")}
-                            )
-                        }
-                    }
+                        CampoEditar("Nome",
+                            nomeExibicao,
+                            singleline = true,
+                            onValueChange = { novoValor ->
+                                nomeExibicao = novoValor
+                            })
+                        CampoEditar(
+                            "Nome de usuário",
+                            nomeUsuario,
+                            singleline = true,
+                            onValueChange = {novoValor -> nomeUsuario = novoValor})
 
+                        CampoEditar(
+                            "Biografia",
+                            biografia,
+                            singleline = false,
+                            onValueChange = {novoValor -> biografia = novoValor})
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(30.dp)
-                        ) {
-                            CampoEditar("Nome",
-                                nomeExibicao,
-                                singleline = true,
-                                onValueChange = { novoValor ->
-                                    nomeExibicao = novoValor
-                                })
-                            CampoEditar(
-                                "Nome de usuário",
-                                nomeUsuario,
-                                singleline = true,
-                                onValueChange = {novoValor -> nomeUsuario = novoValor})
-
-                            CampoEditar(
-                                "Biografia",
-                                biografia,
-                                singleline = false,
-                                onValueChange = {novoValor -> biografia = novoValor})
-
-                            CampoEditar(
-                                "Email",
-                                email,
-                                singleline = true,
-                                onValueChange = {novoValor -> email = novoValor})
-                        }
+                        CampoEditar(
+                            "Email",
+                            email,
+                            singleline = true,
+                            onValueChange = {novoValor -> email = novoValor})
                     }
                 }
             }
