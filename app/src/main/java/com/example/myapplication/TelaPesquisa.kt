@@ -87,7 +87,8 @@ fun TelaPesquisa(navController: NavController, idUsuario: Int = 0) {
                         ) {
                             usuario.amigos.add(amigo.id)
                         }
-                    }
+                    },
+                    navController = navController
                 )
             }
         }
@@ -124,12 +125,16 @@ fun BarraPesquisa(
     usuarios: List<Usuario>,
     onAdicionarAmigo: (Usuario) -> Unit,
     usuarioLogado: Usuario,
+    navController: NavController
 ) {
     var pesquisarP by remember { mutableStateOf("") }
 
     val usuariosFiltrados = usuarios.filter {
-        it.nomeExibicao.contains(pesquisarP, ignoreCase = true) ||
+        it.id != 0 && (
+                it.nomeExibicao.contains(pesquisarP, ignoreCase = true) ||
                 it.nomeUsuario.contains(pesquisarP, ignoreCase = true)
+            )
+
     }
 
     Column {
@@ -195,7 +200,7 @@ fun BarraPesquisa(
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 5.dp)
                         .clickable{
-//                            VerPerfilUsuario(usuario.id)
+                            navController.navigate(Rotas.VER_PERFIL_USUARIO.replace("{idUsuario}", usuario.id.toString()))
                         },
 
                     colors = CardDefaults.cardColors(

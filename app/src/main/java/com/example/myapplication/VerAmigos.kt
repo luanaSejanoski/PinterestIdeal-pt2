@@ -27,6 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -190,8 +192,8 @@ fun BarraPesquisaAmigos(
                             color = Color.Gray
                         )
                     },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.Transparent
+                    colors = TextFieldDefaults.colors(
+                        Color.Transparent
                     )
                 )
             }
@@ -226,68 +228,78 @@ fun ItemAmigo(
     onExcluirClick: () -> Unit,
     navController: NavController
 ) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 20.dp, vertical = 5.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF2c2c2c)
+        ),
+        shape = RoundedCornerShape(12.dp) // Ou o formato de canto que preferir
     ) {
-        // Lado Esquerdo: Avatar e Nomes
         Row(
             modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    navController.navigate(
-                        Rotas.VER_PERFIL_USUARIO.replace("{idUsuario}", usuario.id.toString())
-                    )
-                },
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Surface(
-                modifier = Modifier.size(40.dp),
-                color = Color.White,
-                shape = CircleShape
+            // Lado Esquerdo: Avatar e Nomes
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        navController.navigate(
+                            Rotas.VER_PERFIL_USUARIO.replace("{idUsuario}", usuario.id.toString())
+                        )
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (imagem != null) {
-                    Image(
-                        painter = painterResource(id = imagem),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                Surface(
+                    modifier = Modifier.size(40.dp),
+                    color = Color.White,
+                    shape = CircleShape
+                ) {
+                    if (imagem != null) {
+                        Image(
+                            painter = painterResource(id = imagem),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column {
+                    Text(text = usuario.nomeExibicao, color = Color.White)
+                    Text(text = "@${usuario.nomeUsuario}", color = Color.Gray)
                 }
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            // Lado Direito: 2 Ícones (Mensagem e Excluir)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Ícone de Mensagem
+                IconButton(onClick = onMensagemClick) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.comente),
+                        contentDescription = "Mensagem",
+                        tint = Color.White
+                    )
+                }
 
-            Column {
-                Text(text = usuario.nomeExibicao, color = Color.White)
-                Text(text = "@${usuario.nomeUsuario}", color = Color.Gray)
-            }
-        }
-
-        // Lado Direito: 2 Ícones (Mensagem e Excluir)
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Ícone de Mensagem
-            IconButton(onClick = onMensagemClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.comente),
-                    contentDescription = "Mensagem",
-                    tint = Color.White
-                )
-            }
-
-            // Ícone de Excluir (Remove da lista de amigos)
-            IconButton(onClick = onExcluirClick) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Excluir amigo",
-                    tint = Color.White
-                )
+                // Ícone de Excluir (Remove da lista de amigos)
+                IconButton(onClick = onExcluirClick) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Excluir amigo",
+                        tint = Color.White
+                    )
+                }
             }
         }
     }

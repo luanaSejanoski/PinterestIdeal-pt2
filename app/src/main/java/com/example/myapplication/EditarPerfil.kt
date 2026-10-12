@@ -46,6 +46,7 @@ import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -119,18 +120,23 @@ fun CampoEditar(nomeCampo: String,
                 shape = RoundedCornerShape(8.dp)
             )
             .onFocusChanged { campoFocado -> focado = campoFocado.isFocused },
-        value = valor?: "",
-        onValueChange = {novoNome -> onValueChange(novoNome)},
-        label = { Text(text = nomeCampo)},
+        value = valor ?: "",
+        onValueChange = { novoNome -> onValueChange(novoNome) },
+        label = { Text(text = nomeCampo) },
         singleLine = singleline,
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.Transparent,
+        textStyle = LocalTextStyle.current.copy(color = Color.White),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             focusedLabelColor = Color.White,
             unfocusedLabelColor = Color.White,
-            textColor = Color.White,
-            placeholderColor = Color.Gray
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedPlaceholderColor = Color.Gray,
+            unfocusedPlaceholderColor = Color.Gray
         )
     )
 }
