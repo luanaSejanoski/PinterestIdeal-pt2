@@ -2,14 +2,16 @@ package com.example.myapplication
 
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Bundle
+import androidx.compose.ui.window.Dialog
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,13 +43,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.mutableStateListOf
+
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import com.example.myapplication.data.Dados.proximoIdPin
@@ -63,7 +64,7 @@ fun gerarBlocoIcone(cor: Color? = null,
                     icon: Painter? = null,
                     texto: String? = null,
                     corTexto: Color = Color.White,
-                    onClick: () -> Unit = {},
+                    onClick: () -> Unit = {}
 ){
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier.clickable {
@@ -77,14 +78,21 @@ fun gerarBlocoIcone(cor: Color? = null,
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun gerarBlocoImagem(
     imagem: Uri,
     proporcao: Float,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {}
 ){
     Box(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(12.dp))
+        .combinedClickable(
+            onClick = onClick,
+            onLongClick = onLongClick
+        )
     ){
         Image(
             painter = rememberAsyncImagePainter(imagem),
@@ -137,12 +145,21 @@ fun salvarNomePasta(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewTelaItensPasta() {
+    val navController = rememberNavController()
 
+    TelaItensPasta(
+        navController = navController,
+
+        )
+}
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
 fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
-
+    println("ENTREI NA TELA ITENS PASTA")
     val pasta = Dados.pastas.find{it.id == idPasta}?: return
 
     Scaffold(
@@ -165,6 +182,8 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
         var mostrarDialogoMudarNome by remember { mutableStateOf(false) }
         var mostrarDialogoExcluir by remember { mutableStateOf(false) }
         var novoNome by remember { mutableStateOf("") }
+
+        var imagemAmpliada by remember {mutableStateOf<Uri?>(null)}
 
 
         val context = LocalContext.current
@@ -281,10 +300,36 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                                 }
                                             )
                                         }
-                                        Row() {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+
+                                            Row(
+                                                modifier = Modifier
+                                                    .clip(RoundedCornerShape(50))
+                                                    .background(Color(0xFF313030))
+                                                    .border(
+                                                        width = 1.dp,
+                                                        color = Color.Transparent
+                                                    )
+                                                .padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.SpaceBetween
+
+                                            ) {
+                                                gerarBlocoIcone(x = 23, y = 5,
+                                                    icon = painterResource( if(pasta.privado) R.drawable.pasta_privada else R.drawable.pasta_publica)
+                                                )
+
+                                                Text(
+                                                    text = if(pasta.privado) "Pasta privada" else "Pasta pública",
+                                                    color = Color.White,
+                                                )
+                                            }
+
                                             Text(
-                                                text = "${pasta.pins.size} Pins",
-                                                color = Color.White
+                                                text = " • ${pasta.pins.size} Pins",
+                                                color = Color.LightGray,
                                             )
                                         }
                                     }
@@ -349,7 +394,7 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
 
                             val colunaEsquerda = mutableListOf<Pin>()
                             val colunaDireita = mutableListOf<Pin>()
-                            val pinsDaPasta = Dados.pins.filter { pin -> pin.id in pasta.pins }
+                            val pinsDaPasta = Dados.pins.filter { pin -> pin.id in pasta.pins }.reversed()
                             organizaImagensColuna(pinsDaPasta, colunaEsquerda, colunaDireita)
 
 
@@ -373,8 +418,9 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                         // Define a proporção da imagem para que ela mantenha suas medidas originais na tela
                                         val proporcao =
                                             item.largura.toFloat() / item.altura.toFloat()
-                                        gerarBlocoImagem(item.imagem, proporcao)
-
+                                        gerarBlocoImagem(item.imagem, proporcao,
+                                            onClick = {imagemAmpliada = item.imagem},
+                                            onLongClick = {pasta.pins.remove(item.id)})
                                     }
                                 }
                                 Column(
@@ -384,12 +430,32 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                     colunaDireita.forEach { item ->
                                         val proporcao =
                                             item.largura.toFloat() / item.altura.toFloat()
-                                        gerarBlocoImagem(item.imagem, proporcao)
+                                        gerarBlocoImagem(item.imagem, proporcao,
+                                            onClick = {imagemAmpliada = item.imagem},
+                                            onLongClick = {pasta.pins.remove(item.id)}
+                                        )
                                     }
                                 }
                             }
                         }
                     }
+        }
+
+        //amplia a imagem quando clicada
+        imagemAmpliada?.let{imagem ->
+            Dialog(
+                onDismissRequest = {imagemAmpliada = null}
+            ){
+                Image(
+                    painter = rememberAsyncImagePainter(imagem),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { imagemAmpliada = null },
+                    contentScale = ContentScale.Fit
+                )
+
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ object Rotas{
      const val MENSAGENS = "veramigos/0"
      const val CHAT = "chat"
      const val VER_PERFIL_USUARIO = "verPerfilUsuario/{idUsuario}"
-     const val VER_PASTA_USUARIO = "verPastaUsuario/0"
+     const val VER_PASTA_USUARIO = "verPastaUsuario/{idPasta}"
      const val VER_AMIGOS = "verAmigos/{idUsuario}"
 }
 
@@ -64,12 +64,6 @@ fun AppNavigation(navController: NavHostController) {
                composable(Rotas.CHAT){
                     TelaMsg(navController)
                }
-//               composable(Rotas.VER_AMIGOS,
-//                    arguments = listOf(navArgument("idUsuario") { type = NavType.IntType })
-//               ){ entrada ->
-//                    val idUsuario = entrada.arguments?.getInt("idUsuario") ?: 0
-//                    TelaVerAmigos(navController, idUsuario = idUsuario)
-//               }
 
                composable(Rotas.VER_PERFIL_USUARIO,
                     arguments = listOf(navArgument("idUsuario") { type = NavType.IntType })
@@ -78,7 +72,7 @@ fun AppNavigation(navController: NavHostController) {
                     TelaVerPerfilUsuario(navController, idUsuario = idUsuario)
                }
                composable(Rotas.VER_PASTA_USUARIO){  entrada ->
-                    val idPasta = entrada.arguments?.getString("idPasta")?.toIntOrNull() ?: 0
+                    val idPasta = entrada.arguments?.getString("idPasta")?.toIntOrNull()
                     TelaVerPastaUsuario(navController, idPasta = idPasta)
                }
 

@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -48,7 +49,6 @@ fun TelaVerPerfilUsuario(navController: NavHostController, idUsuario: Int = 1){
         color = Color(0xFF1e1e1e)
     ){
         Column(modifier = Modifier.fillMaxSize()){
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -146,46 +146,36 @@ fun TelaVerPerfilUsuario(navController: NavHostController, idUsuario: Int = 1){
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Row(
-                        modifier = Modifier
-                            .size(height = 2.dp, width = 100.dp)
-                            .background(Color.White)
-                    ) {}
                 }
             }
 
             // Pastas criadas
-            Row(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 30.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
+                    .padding(horizontal = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2)
-                ) {
-                    val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
+                val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
 
-                    pastasDoUsuario.forEach { pasta ->
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.Transparent
-                                )
-                            ) {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    gararPasta(pasta.nome, pasta.pins.size,
-                                        onclick = {
-                                            navController.navigate(
-                                                Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
-                                            )
-                                        })
-                                }
-                            }
+                items(pastasDoUsuario) { pasta ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.Transparent
+                        )
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            gararPasta(pasta,
+                                onclick = {
+                                    navController.navigate(
+                                        Rotas.VER_PASTA_USUARIO.replace("{idPasta}", pasta.id.toString())
+                                    )
+                                })
                         }
                     }
                 }

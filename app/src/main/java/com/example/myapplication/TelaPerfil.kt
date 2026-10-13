@@ -25,7 +25,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -33,11 +36,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImagePainter
+import com.example.myapplication.data.Pasta
 
 @Composable
 fun gerarBotao(x: Float,
@@ -59,38 +67,79 @@ fun gerarBotao(x: Float,
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun gararPasta(nomePasta: String, numeroPins: Int, onclick: () -> Unit){
+fun PreviewTelaPerfil() {
+    val navController = rememberNavController()
+
+    TelaPerfil(
+        navController = navController,
+
+        )
+}
+
+@Composable
+fun gararPasta(pasta: Pasta,  onclick: () -> Unit){
+
+    //pega os dois ultimos pins
+    val pins = Dados.pins
+        .filter{ pin ->
+        pin.id in pasta.pins}
+        .reversed()
+        .take(2)
+
+    //pega a imagem dos dois ultimos pins
+    val imagens = pins.map{pin -> pin.imagem}
+
     Column(
+        modifier= Modifier.fillMaxHeight()
     ) {
         Box(
             modifier = Modifier
-                .padding(vertical = 10.dp)
+                .padding(vertical = 2.dp)
                 .background(Color.Transparent)
-                .size(height = 100.dp, width = 130.dp)
+                .size(height = 130.dp, width = 180.dp)
+                .border(
+                    width = 1.dp,
+                    color = Color.Transparent,
+                    shape = RoundedCornerShape(5.dp)
+                )
+                .clip(RoundedCornerShape(10.dp))
                 .clickable{onclick()},
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
+
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.pasta),
-                contentDescription = "pasta",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize().padding(4.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+
+                imagens.forEach { imagem ->
+                        Image(
+                            painter = rememberAsyncImagePainter(imagem),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight(),
+                                contentScale = ContentScale.Crop
+
+                        )
+                }
+
+            }
         }
 
-        Text(text = "$nomePasta",
+        Text(text = "${pasta.nome}",
             color = Color.White,
             fontSize = 14.sp
         )
-        Text(text = "$numeroPins Pins",
+        Text(text = "${pasta.pins.size} Pins",
             color = Color.White,
             fontSize = 12.sp
         )
 
     }
 }
+
 
 @Composable
 fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
@@ -183,7 +232,7 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.Center
             ) {
                 Column(
                     modifier = Modifier
@@ -197,21 +246,14 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    Row(
-                        modifier = Modifier
-                            .size(height = 2.dp, width = 100.dp)
-                            .background(Color.White)
-                    ) {}
                 }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-            ) {
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(2)
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                     val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
 
@@ -226,7 +268,7 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                                 modifier = Modifier.fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {
-                                gararPasta(pasta.nome, pasta.pins.size,
+                                gararPasta(pasta,
                                     onclick = {
                                         navController.navigate(
                                             Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
@@ -236,7 +278,6 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                         }
                     }
                 }
-            }
         }
     }
 }

@@ -38,6 +38,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Switch
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
@@ -58,10 +59,9 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
     val usuario = Dados.usuarios.find { it.id == idUsuario }?: return;
 
     var nomePasta by remember { mutableStateOf("") }
+    var privado by remember { mutableStateOf(false) }
     var descricao by remember { mutableStateOf("") }
     var nomeFocado by remember { mutableStateOf(false) }
-    var descricaoFocada by remember { mutableStateOf(false) }
-
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -142,40 +142,15 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
 
                     Spacer(modifier = Modifier.height(30.dp))
 
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(90.dp)
-                            .padding(horizontal = 20.dp),
-                        color = Color.Transparent,
-                        shape = RoundedCornerShape(5.dp),
-                        border = BorderStroke(1.dp,
-                            if(descricaoFocada) Color.Red else Color.White)
-                    ) {
-                        TextField(
-                            value = descricao,
-                            onValueChange = { descricao = it },
-                            modifier = Modifier.onFocusChanged {
-                                descricaoFocada = it.isFocused
-                            },
-                            textStyle = LocalTextStyle.current.copy(
-                                color = Color.White
-                            ),
-                            placeholder = {
-                                Text(
-                                    text = "Descrição (opcional)",
-                                    color = Color.White
-                                )
-                            },
-                            colors = TextFieldDefaults.textFieldColors(
-                                containerColor = Color.Transparent
-                            )
+                        Switch(
+                            checked = privado,
+                            onCheckedChange = {privado = it}
                         )
                     }
-                }
+
 
                 val novoId = proximoIdPasta()
-                val novaPasta = Pasta(novoId, nomePasta, descricao)
+                val novaPasta = Pasta(novoId, privado, nomePasta, descricao)
 
                 BtnCriarPasta(
                     modifier = Modifier.align(Alignment.BottomCenter),
