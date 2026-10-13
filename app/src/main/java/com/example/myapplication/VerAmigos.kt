@@ -117,7 +117,7 @@ fun TelaVerAmigos(navController: NavController, idUsuario: Int = 0){
                         ).show()
                     },
                     onMensagemClick = { amigo ->
-                        navController.navigate(Rotas.CHAT)
+                        navController.navigate("chat/${amigo.id}")
                     },
                     navController = navController
                 )
@@ -279,7 +279,7 @@ fun ItemAmigo(
                 // Ícone de Mensagem
                 IconButton(onClick = onMensagemClick) {
                     Icon(
-                        painter = painterResource(id = R.drawable.comente),
+                        painter = painterResource(id = R.drawable.chat),
                         contentDescription = "Mensagem",
                         tint = Color.White,
 
