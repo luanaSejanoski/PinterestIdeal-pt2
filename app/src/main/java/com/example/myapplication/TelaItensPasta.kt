@@ -15,12 +15,15 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
@@ -44,6 +47,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -155,7 +161,7 @@ fun PreviewTelaItensPasta() {
 
         )
 }
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
 @Composable
 fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
@@ -303,7 +309,6 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-
                                             Row(
                                                 modifier = Modifier
                                                     .clip(RoundedCornerShape(50))
@@ -312,10 +317,20 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                                         width = 1.dp,
                                                         color = Color.Transparent
                                                     )
-                                                .padding(horizontal = 8.dp),
+                                                    .padding(horizontal = 8.dp)
+                                                    .combinedClickable(
+                                                        onClick = {},
+                                                        onLongClick = {
+                                                            pasta.privado = !pasta.privado
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Visibilidade da pasta alterada!",
+                                                                Toast.LENGTH_LONG
+                                                            ).show()
+                                                        }
+                                                    ),
                                                 verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.SpaceBetween
-
+                                                horizontalArrangement = Arrangement.SpaceBetween,
                                             ) {
                                                 gerarBlocoIcone(x = 23, y = 5,
                                                     icon = painterResource( if(pasta.privado) R.drawable.pasta_privada else R.drawable.pasta_publica)

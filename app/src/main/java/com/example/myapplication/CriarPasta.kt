@@ -23,14 +23,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -45,12 +49,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.data.Dados
 import com.example.myapplication.data.Dados.proximoIdPasta
 import com.example.myapplication.data.Pasta
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewCriarPasta() {
+    val navController = rememberNavController()
+
+    TelaCriarPasta(
+        navController = navController,
+
+        )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +80,6 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
 
     var nomePasta by remember { mutableStateOf("") }
     var privado by remember { mutableStateOf(false) }
-    var descricao by remember { mutableStateOf("") }
     var nomeFocado by remember { mutableStateOf(false) }
 
     Surface(
@@ -95,17 +114,34 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
 
                 Column(
                     modifier = Modifier.fillMaxSize()
-                        .offset(y = 130.dp),
+                        .offset(y = 40.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Image(
-                        painter = painterResource(id = R.drawable.pasta),
-                        contentDescription = "Pasta",
+                    Box(
                         modifier = Modifier
-                            .width(120.dp)
-                            .height(120.dp)
-                    )
+                            .padding(vertical = 2.dp)
+                            .size(height = 180.dp, width = 280.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Color(0xFF3D3D3D))
+                            .border(
+                                width = 1.dp,
+                                color = Color.Transparent,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        contentAlignment = Alignment.Center,
+
+                        ) {
+                        
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .width(0.6.dp)
+                                    .height(180.dp)
+                                    .background(Color.Black)
+                            )
+
+                    }
 
                     Spacer(modifier = Modifier.height(70.dp))
 
@@ -116,8 +152,10 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
                             .padding(horizontal = 20.dp),
                         color = Color.Transparent,
                         shape = RoundedCornerShape(5.dp),
-                        border = BorderStroke(1.dp,
-                            if(nomeFocado) Color.Red else Color.White)
+                        border = BorderStroke(
+                            1.dp,
+                            if (nomeFocado) Color.Red else Color.White
+                        )
                     ) {
                         TextField(
                             value = nomePasta,
@@ -142,15 +180,43 @@ fun TelaCriarPasta(navController: NavController, idUsuario: Int = 0){
 
                     Spacer(modifier = Modifier.height(30.dp))
 
-                        Switch(
-                            checked = privado,
-                            onCheckedChange = {privado = it}
-                        )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(15.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                               ,
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start,
+                        ) {
+                            Text(
+                                text = "Tornar essa pasta privada",
+                                color = Color.White,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = "Defina quem pode ver sua pasta. As pastas são públicas por padrão, e qualquer pessoa pode vê-las.",
+                                color = Color.LightGray,
+                            )
+                        }
+
+                            Switch(
+                                checked = privado,
+                                onCheckedChange = { privado = it }
+                            )
+
+
                     }
+                }
 
 
                 val novoId = proximoIdPasta()
-                val novaPasta = Pasta(novoId, privado, nomePasta, descricao)
+                val novaPasta = Pasta(id = novoId, statusPrivado = privado ,nome = nomePasta)
 
                 BtnCriarPasta(
                     modifier = Modifier.align(Alignment.BottomCenter),

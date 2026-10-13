@@ -29,6 +29,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -97,14 +98,14 @@ fun gararPasta(pasta: Pasta,  onclick: () -> Unit){
         Box(
             modifier = Modifier
                 .padding(vertical = 2.dp)
-                .background(Color.Transparent)
                 .size(height = 130.dp, width = 180.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color(0xFF3D3D3D))
                 .border(
                     width = 1.dp,
                     color = Color.Transparent,
-                    shape = RoundedCornerShape(5.dp)
+                    shape = RoundedCornerShape(10.dp)
                 )
-                .clip(RoundedCornerShape(10.dp))
                 .clickable{onclick()},
             contentAlignment = Alignment.Center,
 
@@ -116,7 +117,7 @@ fun gararPasta(pasta: Pasta,  onclick: () -> Unit){
                 imagens.forEach { imagem ->
                         Image(
                             painter = rememberAsyncImagePainter(imagem),
-                            contentDescription = "",
+                            contentDescription = null,
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight(),
@@ -125,6 +126,15 @@ fun gararPasta(pasta: Pasta,  onclick: () -> Unit){
                         )
                 }
 
+            }
+            if(imagens.size != 1) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .width(0.6.dp)
+                        .height(130.dp)
+                        .background(Color.Black)
+                )
             }
         }
 
@@ -246,6 +256,12 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
+                    Row(modifier = Modifier
+                        .height(1.dp)
+                        .width(50.dp)
+                        .background(Color.White)
+                    ){}
+
                 }
             }
                 LazyVerticalGrid(
