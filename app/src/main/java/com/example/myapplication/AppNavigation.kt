@@ -7,8 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 
 object Rotas{
@@ -27,8 +29,22 @@ object Rotas{
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(navController: NavHostController) {
+
+     val navBackStackEntry by navController.currentBackStackEntryAsState()
+     val rotaAtual = navBackStackEntry?.destination?.route
+
+     val rotasComMenu = listOf(
+          Rotas.HOME,
+          Rotas.MENSAGENS,
+          Rotas.PESQUISAR_PESSOAS,
+          Rotas.VER_AMIGOS,
+          Rotas.VER_PERFIL_USUARIO
+     )
+
      Scaffold(
+          //adiciona BottomBar apenas em algumas telas
           bottomBar = {
+               if(rotaAtual in rotasComMenu)
                MenuInferior(navController)
           }
      ) { paddingValues ->

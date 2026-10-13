@@ -24,7 +24,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -165,7 +167,7 @@ fun PreviewTelaItensPasta() {
 
 @Composable
 fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
-    println("ENTREI NA TELA ITENS PASTA")
+
     val pasta = Dados.pastas.find{it.id == idPasta}?: return
 
     Scaffold(
@@ -235,7 +237,8 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.fillMaxWidth()
+                        ) {
                             //informações da pasta
                             Row(
                                 modifier = Modifier
@@ -418,8 +421,10 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .fillMaxHeight()
-                                    .padding(3.dp),
+                                    .padding(3.dp)
+                                    .verticalScroll(rememberScrollState()),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
+
                             )
                             {
                                 Column(
