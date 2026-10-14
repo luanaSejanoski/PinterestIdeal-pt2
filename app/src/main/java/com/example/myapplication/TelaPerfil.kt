@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
@@ -275,6 +275,7 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                 items(pastasDoUsuario.chunked(2)){ linha ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
                     ){
                         linha.forEach { pasta ->
                             Column(
@@ -288,7 +289,7 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
                                 ) {
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.Center
+                                        contentAlignment = Alignment.CenterStart
                                     ) {
                                         gararPasta(
                                             pasta,

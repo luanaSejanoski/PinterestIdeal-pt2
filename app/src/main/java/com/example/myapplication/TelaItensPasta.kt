@@ -452,7 +452,12 @@ fun TelaItensPasta(navController: NavController,idPasta: Int = 0) {
                                             item.largura.toFloat() / item.altura.toFloat()
                                         gerarBlocoImagem(item.imagem, proporcao,
                                             onClick = {imagemAmpliada = item.imagem},
-                                            onLongClick = {pasta.pins.remove(item.id)}
+                                            onLongClick = {pasta.pins.remove(item.id)
+                                                Toast.makeText(
+                                                    context,
+                                                    "Pin removido!!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()}
                                         )
                                     }
                                 }

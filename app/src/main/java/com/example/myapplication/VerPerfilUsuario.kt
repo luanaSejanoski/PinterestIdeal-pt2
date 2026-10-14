@@ -162,6 +162,7 @@ fun TelaVerPerfilUsuario(navController: NavHostController, idUsuario: Int = 1){
                 items(pastasDoUsuario.chunked(2)){ linha ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start
                     ){
                         linha.forEach { pasta ->
                             Column(
@@ -175,7 +176,7 @@ fun TelaVerPerfilUsuario(navController: NavHostController, idUsuario: Int = 1){
                                 ) {
                                     Box(
                                         modifier = Modifier.fillMaxWidth(),
-                                        contentAlignment = Alignment.Center
+                                        contentAlignment = Alignment.CenterStart
                                     ) {
                                         gararPasta(
                                             pasta,
