@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -116,9 +118,6 @@ fun TelaVerPerfilUsuario(navController: NavHostController, idUsuario: Int = 1){
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.clickable{
-                                navController.navigate(Rotas.VER_AMIGOS.replace("{idUsuario}", usuario.id.toString()))
-                            }
                         )
                         Text(
                             text = "${usuario.biografia}".take(50),
@@ -156,35 +155,45 @@ fun TelaVerPerfilUsuario(navController: NavHostController, idUsuario: Int = 1){
             }
 
             // Pastas criadas
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(0.dp)
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
             ) {
                 val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
-
-                items(pastasDoUsuario) { pasta ->
-                    Card(
+                items(pastasDoUsuario.chunked(2)){ linha ->
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.Transparent
-                        )
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            gararPasta(pasta,
-                                onclick = {
-                                    navController.navigate(
-                                        Rotas.VER_PASTA_USUARIO.replace("{idPasta}", pasta.id.toString())
+                    ){
+                        linha.forEach { pasta ->
+                            Column(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color.Transparent
                                     )
-                                })
+                                ) {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        gararPasta(
+                                            pasta,
+                                            onclick = {
+                                                navController.navigate(
+                                                    Rotas.DETALHES_PASTA.replace(
+                                                        "{idPasta}",
+                                                        pasta.id.toString()
+                                                    )
+                                                )
+                                            })
+                                    }
+                                }
+                            }
                         }
                     }
                 }
+
             }
         }
     }

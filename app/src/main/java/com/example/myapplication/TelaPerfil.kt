@@ -30,9 +30,11 @@ import androidx.compose.foundation.clickable
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.ui.draw.clip
@@ -264,36 +266,47 @@ fun TelaPerfil(navController: NavHostController, idUsuario: Int = 0) {
 
                 }
             }
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    verticalArrangement = Arrangement.spacedBy(0.dp)
-                ) {
-                    val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
 
-                    items(pastasDoUsuario) { pasta ->
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.Transparent
-                            )
-                        ) {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                val pastasDoUsuario = Dados.pastas.filter { it.id in usuario.pastas }
+                items(pastasDoUsuario.chunked(2)){ linha ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                    ){
+                        linha.forEach { pasta ->
+                            Column(
+                                modifier = Modifier.weight(1f)
                             ) {
-                                gararPasta(pasta,
-                                    onclick = {
-                                        navController.navigate(
-                                            Rotas.DETALHES_PASTA.replace("{idPasta}", pasta.id.toString())
-                                        )
-                                    })
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color.Transparent
+                                    )
+                                ) {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        gararPasta(
+                                            pasta,
+                                            onclick = {
+                                                navController.navigate(
+                                                    Rotas.DETALHES_PASTA.replace(
+                                                        "{idPasta}",
+                                                        pasta.id.toString()
+                                                    )
+                                                )
+                                            })
+                                    }
+                                }
                             }
                         }
                     }
                 }
+            }
         }
     }
 }
